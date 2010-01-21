@@ -1,6 +1,7 @@
 package phcs;
 
 import static common.MathUtils.sq;
+import static java.lang.Math.abs;
 import static java.lang.Math.hypot;
 import static java.lang.Math.sqrt;
 
@@ -92,6 +93,12 @@ public class LightClock {
       if (firstFlash.getY() <= this.getTopY()) {
         flashes.remove(firstFlash);
         info = ((double) firstFlash.getLifetime())/100 + "";
+
+        // TODO this obviously belongs somewhere else
+        if (abs(firstFlash.getLifetime() - 500) < 2) {
+          info += " (You win!)";
+        }
+
       }
     }
   }
