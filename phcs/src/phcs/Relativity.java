@@ -24,24 +24,33 @@ import javax.swing.event.ChangeListener;
 
 public class Relativity extends JFrame implements ActionListener, ChangeListener {
 
+  // lvl
   private LightClock stationaryLightClock = new LightClock(30, 30);
+
+  // lvl
   private LightClock movingLightClock = new LightClock();
 
   // Will eventually be a List<SimulationObject> or something
+  // lvl
   private List<LightClock> simulationObjects = Arrays.asList(stationaryLightClock, movingLightClock);
 
   private Timer timer = new Timer(5, this);
   private JButton goButton = new JButton("Go");
   private JButton resetButton = new JButton("Reset");
+
+  // lvl
   private JSlider speedSlider;
 
+  // lvl
   private String instructions = "Instructions: The light clock on the left is stationary,\n" +
   		"and it takes 4 seconds for the pulse of light to make a complete cycle.\n" +
   		"You can adjust the speed of the light clock on the right using the slider, which\n" +
   		"shows the clock's speed as a percentage of the speed of light.\n" +
   		"Goal: Set the speed so that the light clock on the right makes a complete cycle in 5 seconds.";
 
+  // lvl
   private JLabel speedLabel = new JLabel();
+
   private JPanel panel = new JPanel() {
     @Override
     public void paint(Graphics g) {
@@ -50,6 +59,8 @@ public class Relativity extends JFrame implements ActionListener, ChangeListener
       }
     }
   };
+
+  // lvl
   private void initSlider() {
     speedSlider = new JSlider(0, 100, 0);
     speedSlider.setMajorTickSpacing(5);
