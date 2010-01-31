@@ -2,22 +2,22 @@ package phcs;
 
 import static common.MathUtils.sq;
 import static java.lang.Math.abs;
-import static java.lang.Math.hypot;
 import static java.lang.Math.sqrt;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LightClock {
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-  private Dimension size;
-  private double x, y;
-  private double vx, vy;
+public class LightClock extends SimulationObject {
 
   private List<Flash> flashes;
   private String info = "";
@@ -26,25 +26,25 @@ public class LightClock {
     this(0, 0);
   }
 
+  /**
+   * Create a LightClock at the given position
+   */
   public LightClock(double x, double y) {
     this(x, y, 50, 200);
   }
 
+  /**
+   * Create a LightClock with the given position and size
+   */
   public LightClock(double x, double y, int width, int height) {
-    this(x, y, width, height, 0, 0);
-  }
-
-  public LightClock(double x, double y, int width, int height, double vx, double vy) {
-    setPosition(x, y);
-    setSpeed(vx, vy);
-    size = new Dimension(width, height);
-    this.reset();
+    super(x, y, width, height, 0, 0);
   }
 
   public double getTopX() {
     return x + size.width / 2;
 
   }
+
   public double getTopY() {
     return y;
   }
@@ -52,8 +52,9 @@ public class LightClock {
   public double getBottomX() {
     return x + size.width / 2;
   }
+
   public double getBottomY() {
-      return y + size.height;
+    return y + size.height;
   }
 
   /**
@@ -65,6 +66,7 @@ public class LightClock {
     flashes.add(flash);
   }
 
+  @Override
   public void paint(Graphics g) {
     Graphics2D g2 = (Graphics2D) g;
     Rectangle r = new Rectangle((int) x, (int) y, size.width, size.height);
@@ -78,6 +80,7 @@ public class LightClock {
     }
   }
 
+  @Override
   public void update() {
     x += vx;
     y += vy;
@@ -92,7 +95,7 @@ public class LightClock {
       Flash firstFlash = flashes.get(0);
       if (firstFlash.getY() <= this.getTopY()) {
         flashes.remove(firstFlash);
-        info = ((double) firstFlash.getLifetime())/100 + "";
+        info = ((double) firstFlash.getLifetime()) / 100 + "";
 
         // TODO this obviously belongs somewhere else
         if (abs(firstFlash.getLifetime() - 500) < 2) {
@@ -103,25 +106,49 @@ public class LightClock {
     }
   }
 
-  public void setPosition(double x, double y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  public void setSpeed(double vx, double vy) {
-    if (vy != 0) {
-      throw new UnsupportedOperationException("For now, light clocks can only move horizontally.");
-    }
-    if (hypot(vx, vy) >= 1) {
-      throw new LawsOfPhysicsException("The light clock cannot travel faster than c!");
-    }
-    this.vx = vx;
-    this.vy = vy;
-  }
-
+  @Override
   public void reset() {
+    x = initialX;
+    y = initialY;
     flashes = new LinkedList<Flash>();
     info = "";
   }
 
+  @Override
+  public void go() {
+    flash();
+  }
+
+  // TODO put a title on this panel somehow
+  @Override
+  public JPanel getControlPanel() {
+    if (isVelocityEditable()) {
+      JPanel ctrlPanel = new JPanel();
+      final JSlider slider = new JSlider(0, 100, 0);
+      slider.setMajorTickSpacing(5);
+      slider.setMinorTickSpacing(1);
+      slider.setSnapToTicks(true);
+      slider.setPaintTicks(true);
+      slider.setPaintLabels(true);
+      slider.addChangeListener(new ChangeListener() {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+          setVelocity(((double) slider.getValue()) / 100, 0);
+        }
+      });
+      ctrlPanel.add(slider);
+
+      ctrlPanel.setBorder(BorderFactory.createTitledBorder("Light Clock"));
+
+      return ctrlPanel;
+    }
+    else {
+      return null;
+    }
+  }
+
+  @Override
+  public boolean isControllable() {
+    return isVelocityEditable();
+  }
 }

@@ -1,99 +1,95 @@
 package phcs;
 
-import static common.swingutils.SwingUtils.box;
 import static common.swingutils.SwingUtils.useDefaultLookAndFeel;
 import static common.swingutils.SwingUtils.useDialogExceptionHandler;
 import static java.lang.Math.sqrt;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTextArea;
 import javax.swing.Timer;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-public class Relativity extends JFrame implements ActionListener, ChangeListener {
+public class Relativity extends JFrame implements ActionListener {
 
-  // lvl
-  private LightClock stationaryLightClock = new LightClock(30, 30);
-
-  // lvl
-  private LightClock movingLightClock = new LightClock();
-
-  // Will eventually be a List<SimulationObject> or something
-  // lvl
-  private List<LightClock> simulationObjects = Arrays.asList(stationaryLightClock, movingLightClock);
+  private RelativityLevel level = RelativityLevel.getLevel1(); // TODO for now
 
   private Timer timer = new Timer(5, this);
   private JButton goButton = new JButton("Go");
   private JButton resetButton = new JButton("Reset");
 
-  // lvl
-  private JSlider speedSlider;
+  private List<JComponent> controlComponents;
 
-  // lvl
-  private String instructions = "Instructions: The light clock on the left is stationary,\n" +
-  		"and it takes 4 seconds for the pulse of light to make a complete cycle.\n" +
-  		"You can adjust the speed of the light clock on the right using the slider, which\n" +
-  		"shows the clock's speed as a percentage of the speed of light.\n" +
-  		"Goal: Set the speed so that the light clock on the right makes a complete cycle in 5 seconds.";
-
-  // lvl
-  private JLabel speedLabel = new JLabel();
-
-  private JPanel panel = new JPanel() {
-    @Override
-    public void paint(Graphics g) {
-      for (LightClock lc : simulationObjects) {
-        lc.paint(g);
+  private JPanel createSimulationPanel() {
+    JPanel simulationPanel = new JPanel() {
+      @Override
+      public void paint(Graphics g) {
+        super.paint(g);
+        for (SimulationObject obj : level.getSimulationObjects()) {
+          obj.paint(g);
+        }
       }
-    }
-  };
-
-  // lvl
-  private void initSlider() {
-    speedSlider = new JSlider(0, 100, 0);
-    speedSlider.setMajorTickSpacing(5);
-    speedSlider.setMinorTickSpacing(1);
-    speedSlider.setSnapToTicks(true);
-    speedSlider.setPaintTicks(true);
-    speedSlider.setPaintLabels(true);
+    };
+    simulationPanel.setBackground(Color.CYAN);
+    return simulationPanel;
   }
 
+
   public Relativity() {
-    initSlider();
-    setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
-
-    goButton.addActionListener(this);
-    resetButton.addActionListener(this);
-    speedSlider.addChangeListener(this);
-
-    add(panel);
-
-    JPanel buttonPanel = new JPanel();
-    buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-    buttonPanel.add(goButton);
-    buttonPanel.add(resetButton);
-    buttonPanel.add(speedSlider);
-    buttonPanel.add(speedLabel);
-    this.add(buttonPanel);
-    this.add(box(new JTextArea(instructions)));
-
-    reset();
-
+    setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.weightx = gbc.weighty = 1;
     setSize(1024, 768);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+    gbc.gridx = gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.BOTH;
+    JPanel simulationPanel = createSimulationPanel();
+    add(simulationPanel, gbc);
+
+    gbc.gridy++;
+    gbc.fill = GridBagConstraints.NONE;
+    this.add(createControlPanel(), gbc);
+
+    reset();
     setVisible(true);
+  }
+
+  private JPanel createControlPanel() {
+    goButton.addActionListener(this);
+    resetButton.addActionListener(this);
+
+    JPanel controlPanel = new JPanel();
+    controlPanel.setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridx = gbc.gridy = 0;
+    gbc.weightx = gbc.weighty = 1;
+    gbc.fill = GridBagConstraints.NONE;
+    controlPanel.add(goButton, gbc);
+    gbc.gridx++;
+    controlPanel.add(resetButton, gbc);
+
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.gridwidth = 2;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    // Add the individual objects' control panels to the main control panel
+    for (SimulationObject obj : level.getSimulationObjects()) {
+      if (obj.isControllable()) {
+        controlPanel.add(obj.getControlPanel(), gbc);
+        gbc.gridy++;
+      }
+    }
+
+    return controlPanel;
   }
 
   public static double gamma(double speed) {
@@ -109,35 +105,37 @@ public class Relativity extends JFrame implements ActionListener, ChangeListener
       reset();
     }
     else if (e.getSource() == timer) {
-      for (LightClock lc : simulationObjects) {
-        lc.update();
+      for (SimulationObject obj : level.getSimulationObjects()) {
+        obj.update();
       }
       repaint();
     }
   }
 
-  @Override
-  public void stateChanged(ChangeEvent e) {
-    if (e.getSource() == speedSlider) {
-      movingLightClock.setSpeed(((double) speedSlider.getValue())/100, 0);
-      speedLabel.setText("v = " + ((double) speedSlider.getValue())/100 + "c");
-    }
+  private void go() {
+    setControlsEnabled(true);
+    timer.start();
+    level.go();
   }
 
-  private void go() {
-    speedSlider.setEnabled(false);
-    timer.start();
-    stationaryLightClock.flash();
-    movingLightClock.flash();
+  private void setControlsEnabled(boolean enable) {
+    // FIXME!
+
+    if (true) {
+      return;
+    }
+
+    for (JComponent component : controlComponents) {
+      component.setEnabled(enable);
+    }
   }
 
   private void reset() {
-    movingLightClock.setPosition(100, 30);
-    for (LightClock lc : simulationObjects) {
-      lc.reset();
+    for (SimulationObject obj : level.getSimulationObjects()) {
+      obj.reset();
     }
     timer.stop();
-    speedSlider.setEnabled(true);
+    setControlsEnabled(true);
     repaint();
   }
 
