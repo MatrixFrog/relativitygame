@@ -1,8 +1,8 @@
 package phcs.objects;
 
-import static common.MathUtils.sq;
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
+import static util.MathUtils.sq;
 
 import java.awt.Color;
 import java.awt.Graphics;

@@ -1,4 +1,4 @@
-package common.swingutils;
+package util.swingutils;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

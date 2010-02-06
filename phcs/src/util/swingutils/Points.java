@@ -1,4 +1,4 @@
-package common.swingutils;
+package util.swingutils;
 
 import java.awt.Point;
 import java.util.ArrayList;

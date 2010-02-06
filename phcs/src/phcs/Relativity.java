@@ -1,10 +1,9 @@
 package phcs;
 
-import static common.swingutils.SwingUtils.useDefaultLookAndFeel;
-import static common.swingutils.SwingUtils.useDialogExceptionHandler;
 import static java.lang.Math.sqrt;
+import static util.swingutils.SwingUtils.useDefaultLookAndFeel;
+import static util.swingutils.SwingUtils.useDialogExceptionHandler;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -40,7 +39,6 @@ public class Relativity extends JFrame implements ActionListener {
         }
       }
     };
-    simulationPanel.setBackground(Color.CYAN);
     return simulationPanel;
   }
 

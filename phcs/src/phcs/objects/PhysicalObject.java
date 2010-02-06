@@ -4,6 +4,7 @@ import static java.lang.Math.hypot;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 
 import javax.swing.JPanel;
 
@@ -13,8 +14,6 @@ import phcs.LawsOfPhysicsException;
  * An instance of this class is a physical object such as a light-clock or a spaceship.
  */
 public abstract class PhysicalObject {
-
-  // TODO encapsulate all protected fields and make them private?
 
   protected Dimension size;
 
@@ -91,6 +90,14 @@ public abstract class PhysicalObject {
 
   public void setVelocityEditable(boolean speedEditable) {
     this.velocityEditable = speedEditable;
+  }
+
+  public double getSpeed() {
+    return hypot(vx, vy);
+  }
+
+  public Point getCenter() {
+    return new Point((int) x + size.width/2, (int) y + size.height/2);
   }
 
   /**
