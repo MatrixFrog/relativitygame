@@ -1,4 +1,4 @@
-package phcs;
+package phcs.objects;
 
 import static java.lang.Math.hypot;
 
@@ -7,7 +7,12 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
-public abstract class SimulationObject {
+import phcs.LawsOfPhysicsException;
+
+/**
+ * An instance of this class is a physical object such as a light-clock or a spaceship.
+ */
+public abstract class PhysicalObject {
 
   // TODO encapsulate all protected fields and make them private?
 
@@ -27,7 +32,7 @@ public abstract class SimulationObject {
   /**
    * Create an object with the given position, size, and speed.
    */
-  public SimulationObject(double x, double y, int width, int height, double vx, double vy) {
+  public PhysicalObject(double x, double y, int width, int height, double vx, double vy) {
     setInitialPosition(x, y);
     this.vx = vx;
     this.vy = vy;

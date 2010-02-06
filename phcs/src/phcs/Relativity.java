@@ -18,6 +18,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import phcs.objects.PhysicalObject;
+
 public class Relativity extends JFrame implements ActionListener {
 
   private RelativityLevel level = RelativityLevel.getLevel1(); // TODO for now
@@ -33,7 +35,7 @@ public class Relativity extends JFrame implements ActionListener {
       @Override
       public void paint(Graphics g) {
         super.paint(g);
-        for (SimulationObject obj : level.getSimulationObjects()) {
+        for (PhysicalObject obj : level.getSimulationObjects()) {
           obj.paint(g);
         }
       }
@@ -82,7 +84,7 @@ public class Relativity extends JFrame implements ActionListener {
     gbc.gridwidth = 2;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     // Add the individual objects' control panels to the main control panel
-    for (SimulationObject obj : level.getSimulationObjects()) {
+    for (PhysicalObject obj : level.getSimulationObjects()) {
       if (obj.isControllable()) {
         controlPanel.add(obj.getControlPanel(), gbc);
         gbc.gridy++;
@@ -105,7 +107,7 @@ public class Relativity extends JFrame implements ActionListener {
       reset();
     }
     else if (e.getSource() == timer) {
-      for (SimulationObject obj : level.getSimulationObjects()) {
+      for (PhysicalObject obj : level.getSimulationObjects()) {
         obj.update();
       }
       repaint();
@@ -131,7 +133,7 @@ public class Relativity extends JFrame implements ActionListener {
   }
 
   private void reset() {
-    for (SimulationObject obj : level.getSimulationObjects()) {
+    for (PhysicalObject obj : level.getSimulationObjects()) {
       obj.reset();
     }
     timer.stop();

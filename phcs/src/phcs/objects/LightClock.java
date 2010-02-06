@@ -1,4 +1,4 @@
-package phcs;
+package phcs.objects;
 
 import static common.MathUtils.sq;
 import static java.lang.Math.abs;
@@ -17,7 +17,9 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class LightClock extends SimulationObject {
+import phcs.Flash;
+
+public class LightClock extends PhysicalObject {
 
   private List<Flash> flashes;
   private String info = "";
@@ -138,6 +140,7 @@ public class LightClock extends SimulationObject {
       });
       ctrlPanel.add(slider);
 
+      // TODO use instance's unique name instead of just "Light Clock"
       ctrlPanel.setBorder(BorderFactory.createTitledBorder("Light Clock"));
 
       return ctrlPanel;

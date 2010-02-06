@@ -3,15 +3,18 @@ package phcs;
 import java.util.ArrayList;
 import java.util.List;
 
+import phcs.objects.LightClock;
+import phcs.objects.PhysicalObject;
+
 /**
  * An instance of this class represents one single "level" or "puzzle" to be solved.
  */
 // TODO encode "goal" condition
 public class RelativityLevel {
 
-  private List<SimulationObject> simulationObjects = new ArrayList<SimulationObject>();
+  private List<PhysicalObject> simulationObjects = new ArrayList<PhysicalObject>();
 
-  public void addSimulationObject(SimulationObject obj) {
+  public void addSimulationObject(PhysicalObject obj) {
     simulationObjects.add(obj);
   }
 
@@ -24,8 +27,8 @@ public class RelativityLevel {
         "shows the clock's speed as a percentage of the speed of light.\n" +
         "Goal: Set the speed so that the light clock on the right makes a complete cycle in 5 seconds.";
     */
-    SimulationObject stationaryLightClock = new LightClock(30, 30);
-    SimulationObject movingLightClock = new LightClock(100, 30);
+    PhysicalObject stationaryLightClock = new LightClock(30, 30);
+    PhysicalObject movingLightClock = new LightClock(100, 30);
     movingLightClock.setVelocityEditable(true);
 
     RelativityLevel level1 = new RelativityLevel();
@@ -36,7 +39,7 @@ public class RelativityLevel {
     return level1;
   }
 
-  public List<SimulationObject> getSimulationObjects() {
+  public List<PhysicalObject> getSimulationObjects() {
     return simulationObjects;
   }
 
@@ -44,7 +47,7 @@ public class RelativityLevel {
    * This is what gets called when the player presses the "Go" button in the UI
    */
   public void go() {
-    for (SimulationObject obj : simulationObjects) {
+    for (PhysicalObject obj : simulationObjects) {
       obj.go();
     }
   }
