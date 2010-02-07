@@ -1,6 +1,5 @@
 package phcs.objects;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 import static util.MathUtils.sq;
 
@@ -18,11 +17,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import phcs.Flash;
+import util.swingutils.RecursiveEnablePanel;
 
-public class LightClock extends PhysicalObject {
+public class LightClock extends PhysicalObject implements ChangeListener {
 
   private List<Flash> flashes;
-  private String info = "";
 
   public LightClock() {
     this(0, 0);
@@ -38,12 +37,12 @@ public class LightClock extends PhysicalObject {
   /**
    * Create a LightClock with the given position and size
    */
-  public LightClock(double x, double y, int width, int height) {
-    super(x, y, width, height, 0, 0);
+  public LightClock(double x, double y, double width, double height) {
+    super(x, y, width, height, 0.0, 0.0);
   }
 
   public double getTopX() {
-    return x + size.width / 2;
+    return x + width / 2;
 
   }
 
@@ -52,11 +51,11 @@ public class LightClock extends PhysicalObject {
   }
 
   public double getBottomX() {
-    return x + size.width / 2;
+    return x + width / 2;
   }
 
   public double getBottomY() {
-    return y + size.height;
+    return y + height;
   }
 
   /**
@@ -71,11 +70,11 @@ public class LightClock extends PhysicalObject {
   @Override
   public void paint(Graphics g) {
     Graphics2D g2 = (Graphics2D) g;
-    Rectangle r = new Rectangle((int) x, (int) y, size.width, size.height);
+    Rectangle r = new Rectangle((int) x, (int) y, (int) width, (int) height);
     g2.setColor(Color.BLACK);
     g2.draw(r);
 
-    g.drawString(info, (int) x, (int) y);
+    g.drawString(getName(), (int) x, (int) y);
 
     for (Flash flash : flashes) {
       flash.paint(g);
@@ -97,13 +96,6 @@ public class LightClock extends PhysicalObject {
       Flash firstFlash = flashes.get(0);
       if (firstFlash.getY() <= this.getTopY()) {
         flashes.remove(firstFlash);
-        info = ((double) firstFlash.getLifetime()) / 100 + "";
-
-        // TODO this obviously belongs somewhere else
-        if (abs(firstFlash.getLifetime() - 500) < 2) {
-          info += " (You win!)";
-        }
-
       }
     }
   }
@@ -113,7 +105,6 @@ public class LightClock extends PhysicalObject {
     x = initialX;
     y = initialY;
     flashes = new LinkedList<Flash>();
-    info = "";
   }
 
   @Override
@@ -121,33 +112,33 @@ public class LightClock extends PhysicalObject {
     flash();
   }
 
-  // TODO put a title on this panel somehow
+  // TODO move some of this logic into the PhysicalObject class (?)
   @Override
   public JPanel getControlPanel() {
     if (isVelocityEditable()) {
-      JPanel ctrlPanel = new JPanel();
-      final JSlider slider = new JSlider(0, 100, 0);
+      JPanel ctrlPanel = new RecursiveEnablePanel();
+      JSlider slider = new JSlider(0, 100, 0);
       slider.setMajorTickSpacing(5);
       slider.setMinorTickSpacing(1);
       slider.setSnapToTicks(true);
       slider.setPaintTicks(true);
       slider.setPaintLabels(true);
-      slider.addChangeListener(new ChangeListener() {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-          setVelocity(((double) slider.getValue()) / 100, 0);
-        }
-      });
+      slider.addChangeListener(this);
+
       ctrlPanel.add(slider);
 
-      // TODO use instance's unique name instead of just "Light Clock"
-      ctrlPanel.setBorder(BorderFactory.createTitledBorder("Light Clock"));
+      ctrlPanel.setBorder(BorderFactory.createTitledBorder(getName()));
 
       return ctrlPanel;
     }
     else {
       return null;
     }
+  }
+
+  @Override
+  public void stateChanged(ChangeEvent e) {
+    setVelocity(((double) ((JSlider) e.getSource()).getValue()) / 100, 0);
   }
 
   @Override

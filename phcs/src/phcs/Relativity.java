@@ -9,15 +9,17 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import phcs.objects.PhysicalObject;
+
+// TODO allow for a different mapping of (x,y) -> actual pixels
 
 public class Relativity extends JFrame implements ActionListener {
 
@@ -27,7 +29,8 @@ public class Relativity extends JFrame implements ActionListener {
   private JButton goButton = new JButton("Go");
   private JButton resetButton = new JButton("Reset");
 
-  private List<JComponent> controlComponents;
+  private JPanel controlPanel = new JPanel();
+  private List<JPanel> objectControlPanels = new ArrayList<JPanel>();
 
   private JPanel createSimulationPanel() {
     JPanel simulationPanel = new JPanel() {
@@ -50,24 +53,26 @@ public class Relativity extends JFrame implements ActionListener {
     setSize(1024, 768);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+    goButton.addActionListener(this);
+    resetButton.addActionListener(this);
+
     gbc.gridx = gbc.gridy = 0;
     gbc.fill = GridBagConstraints.BOTH;
     JPanel simulationPanel = createSimulationPanel();
     add(simulationPanel, gbc);
 
     gbc.gridy++;
-    gbc.fill = GridBagConstraints.NONE;
-    this.add(createControlPanel(), gbc);
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    initControlPanel();
+    this.add(controlPanel, gbc);
 
     reset();
     setVisible(true);
   }
 
-  private JPanel createControlPanel() {
-    goButton.addActionListener(this);
-    resetButton.addActionListener(this);
+  private void initControlPanel() {
+    controlPanel.removeAll();
 
-    JPanel controlPanel = new JPanel();
     controlPanel.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.gridx = gbc.gridy = 0;
@@ -80,16 +85,17 @@ public class Relativity extends JFrame implements ActionListener {
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.gridwidth = 2;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.fill = GridBagConstraints.NONE;
+
     // Add the individual objects' control panels to the main control panel
     for (PhysicalObject obj : level.getSimulationObjects()) {
       if (obj.isControllable()) {
-        controlPanel.add(obj.getControlPanel(), gbc);
+        JPanel objectControlPanel = obj.getControlPanel();
+        objectControlPanels.add(objectControlPanel);
+        controlPanel.add(objectControlPanel, gbc);
         gbc.gridy++;
       }
     }
-
-    return controlPanel;
   }
 
   public static double gamma(double speed) {
@@ -113,21 +119,11 @@ public class Relativity extends JFrame implements ActionListener {
   }
 
   private void go() {
-    setControlsEnabled(true);
+    setControlsEnabled(false);
+    goButton.setEnabled(false);
+    resetButton.setEnabled(true);
     timer.start();
     level.go();
-  }
-
-  private void setControlsEnabled(boolean enable) {
-    // FIXME!
-
-    if (true) {
-      return;
-    }
-
-    for (JComponent component : controlComponents) {
-      component.setEnabled(enable);
-    }
   }
 
   private void reset() {
@@ -135,9 +131,18 @@ public class Relativity extends JFrame implements ActionListener {
       obj.reset();
     }
     timer.stop();
+    goButton.setEnabled(true);
+    resetButton.setEnabled(false);
     setControlsEnabled(true);
     repaint();
   }
+
+  private void setControlsEnabled(boolean enable) {
+    for (JPanel objectCtrlPanel : objectControlPanels) {
+      objectCtrlPanel.setEnabled(enable);
+    }
+  }
+
 
   public static void main(String[] args) {
     useDefaultLookAndFeel();

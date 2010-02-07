@@ -19,7 +19,6 @@ public class RelativityLevel {
   }
 
   public static RelativityLevel getLevel1() {
-
     /*
     private String instructions = "Instructions: The light clock on the left is stationary,\n" +
         "and it takes 4 seconds for the pulse of light to make a complete cycle.\n" +
@@ -27,13 +26,15 @@ public class RelativityLevel {
         "shows the clock's speed as a percentage of the speed of light.\n" +
         "Goal: Set the speed so that the light clock on the right makes a complete cycle in 5 seconds.";
     */
-    PhysicalObject stationaryLightClock = new LightClock(30, 30);
-    PhysicalObject movingLightClock = new LightClock(100, 30);
-    movingLightClock.setVelocityEditable(true);
-
     RelativityLevel level1 = new RelativityLevel();
 
+    PhysicalObject stationaryLightClock = new LightClock(30, 30);
+    stationaryLightClock.setName("LC1");
     level1.addSimulationObject(stationaryLightClock);
+
+    PhysicalObject movingLightClock = new LightClock(100, 30);
+    movingLightClock.setName("LC2");
+    movingLightClock.setVelocityEditable(true);
     level1.addSimulationObject(movingLightClock);
 
     return level1;

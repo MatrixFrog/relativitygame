@@ -2,7 +2,6 @@ package phcs.objects;
 
 import static java.lang.Math.hypot;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 
@@ -15,10 +14,11 @@ import phcs.LawsOfPhysicsException;
  */
 public abstract class PhysicalObject {
 
-  protected Dimension size;
-
   // Current position
   protected double x, y;
+
+  // Object's size in its own rest frame
+  protected double width, height;
 
   // Initial position
   protected double initialX, initialY;
@@ -26,16 +26,19 @@ public abstract class PhysicalObject {
   // Velocity
   protected double vx, vy;
 
+  private String name = "";
+
   private boolean velocityEditable = false;
 
   /**
    * Create an object with the given position, size, and speed.
    */
-  public PhysicalObject(double x, double y, int width, int height, double vx, double vy) {
-    setInitialPosition(x, y);
-    this.vx = vx;
-    this.vy = vy;
-    size = new Dimension(width, height);
+  public PhysicalObject(double x, double y, double width, double height, double vx, double vy) {
+    this.initialX = x;
+    this.initialY = y;
+    this.width = width;
+    this.height = height;
+    setVelocityInternal(vx, vy);
     this.reset();
   }
 
@@ -50,7 +53,7 @@ public abstract class PhysicalObject {
   public abstract void update();
 
   /**
-   *
+   * All the actions that should happen when the level containing this object is reset.
    */
   public abstract void reset();
 
@@ -62,20 +65,24 @@ public abstract class PhysicalObject {
 
   }
 
-  public void setInitialPosition(double x, double y) {
-    this.initialX = x;
-    this.initialY = y;
+  public void setVelocity(double vx, double vy) {
+    if (velocityEditable) {
+      setVelocityInternal(vx, vy);
+    }
+    else {
+      throw new UnsupportedOperationException("This object does not allow its speed to be changed.");
+    }
   }
 
-  public void setVelocity(double vx, double vy) {
-    if (!velocityEditable) {
-      throw new UnsupportedOperationException("This LightClock does not allow its speed to be changed.");
-    }
+  /**
+   * Set the velocity without checking the velocityEditable flag. For internal use only.
+   */
+  private void setVelocityInternal(double vx, double vy) {
     if (vy != 0) {
-      throw new UnsupportedOperationException("For now, light clocks can only move horizontally.");
+      throw new UnsupportedOperationException("For now, objects can only move horizontally.");
     }
     if (hypot(vx, vy) > 1) {
-      throw new LawsOfPhysicsException("The light clock cannot travel faster than c!");
+      throw new LawsOfPhysicsException("Nothing can travel faster than light!");
     }
     this.vx = vx;
     this.vy = vy;
@@ -97,7 +104,7 @@ public abstract class PhysicalObject {
   }
 
   public Point getCenter() {
-    return new Point((int) x + size.width/2, (int) y + size.height/2);
+    return new Point((int) (x + width/2), (int) (y + height/2));
   }
 
   /**
@@ -109,4 +116,12 @@ public abstract class PhysicalObject {
   public abstract JPanel getControlPanel();
 
   public abstract boolean isControllable();
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
 }

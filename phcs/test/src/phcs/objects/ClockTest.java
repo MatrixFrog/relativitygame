@@ -47,7 +47,6 @@ public class ClockTest extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == timer) {
       clock.update();
-      System.out.println(clock.clockDegrees);
       repaint();
     }
   }

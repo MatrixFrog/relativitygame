@@ -4,6 +4,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.min;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
+import static phcs.Relativity.gamma;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,8 +13,10 @@ import javax.swing.JPanel;
 
 public class Clock extends PhysicalObject {
 
-  private final int handLength;
-  double clockDegrees = 0;
+  /** How fast the clock runs in its own rest frame, in degrees per timestep */
+  private static final int CLOCK_SPEED = 2;
+  private final double handLength;
+  private double clockDegrees = 0;
 
   public Clock() {
     this(30, 30);
@@ -43,7 +46,8 @@ public class Clock extends PhysicalObject {
   @Override
   public void paint(Graphics g) {
     g.setColor(Color.BLACK);
-    g.drawOval((int) x, (int) y, size.width, size.height);
+    g.drawString(getName(), (int) x, (int) y);
+    g.drawOval((int) x, (int) y, (int) width, (int) height);
     g.drawLine(getCenter().x, getCenter().y,
         (int) (getCenter().x + handLength*sin(toRadians(clockDegrees))),
         (int) (getCenter().y - handLength*cos(toRadians(clockDegrees))));
@@ -56,7 +60,6 @@ public class Clock extends PhysicalObject {
 
   @Override
   public void update() {
-    // TODO multiply by gamma or something
-    clockDegrees = (clockDegrees + 2) % 360;
+    clockDegrees = (clockDegrees + gamma(getSpeed())*CLOCK_SPEED) % 360;
   }
 }
