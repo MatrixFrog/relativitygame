@@ -20,6 +20,7 @@ import javax.swing.Timer;
 import phcs.objects.PhysicalObject;
 
 // TODO allow for a different mapping of (x,y) -> actual pixels
+// TODO allow user to watch the simulation from any reference frame
 
 public class Relativity extends JFrame implements ActionListener {
 
@@ -45,7 +46,7 @@ public class Relativity extends JFrame implements ActionListener {
     return simulationPanel;
   }
 
-
+  // TODO create a loadLevel() method so that levels can be loaded at runtime
   public Relativity() {
     setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();

@@ -42,7 +42,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
   }
 
   public double getTopX() {
-    return x + width / 2;
+    return x + getWidth() / 2;
 
   }
 
@@ -51,11 +51,11 @@ public class LightClock extends PhysicalObject implements ChangeListener {
   }
 
   public double getBottomX() {
-    return x + width / 2;
+    return x + getWidth() / 2;
   }
 
   public double getBottomY() {
-    return y + height;
+    return y + getHeight();
   }
 
   /**
@@ -70,7 +70,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
   @Override
   public void paint(Graphics g) {
     Graphics2D g2 = (Graphics2D) g;
-    Rectangle r = new Rectangle((int) x, (int) y, (int) width, (int) height);
+    Rectangle r = new Rectangle((int) x, (int) y, (int) getWidth(), (int) getHeight());
     g2.setColor(Color.BLACK);
     g2.draw(r);
 
@@ -102,13 +102,13 @@ public class LightClock extends PhysicalObject implements ChangeListener {
 
   @Override
   public void reset() {
-    x = initialX;
-    y = initialY;
+    super.reset();
     flashes = new LinkedList<Flash>();
   }
 
   @Override
   public void go() {
+    super.go();
     flash();
   }
 
