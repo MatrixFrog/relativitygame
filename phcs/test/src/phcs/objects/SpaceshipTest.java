@@ -12,22 +12,22 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class ClockTest extends JFrame implements ActionListener {
+public class SpaceshipTest extends JFrame implements ActionListener {
 
-  private Clock clock1 = new Clock(10, 10, 50, 50, 0, 0);
-  private Clock clock2 = new Clock(10, 80, 50, 50, 0.3, 0);
+  private Spaceship spaceship;
   private Timer timer = new Timer(5, this);
 
   private JPanel panel = new JPanel() {
     @Override
     public void paint(Graphics g) {
-      clock1.paint(g);
-      clock2.paint(g);
+      super.paint(g);
+      spaceship.paint(g);
     }
   };
 
-  public ClockTest() {
+  public SpaceshipTest(Spaceship spaceship) {
     setTitle(getClass().getSimpleName());
+    this.spaceship = spaceship;
 
     setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
     add(panel);
@@ -42,14 +42,13 @@ public class ClockTest extends JFrame implements ActionListener {
   public static void main(String[] args) {
     useDefaultLookAndFeel();
     useDialogExceptionHandler();
-    new ClockTest();
+    new SpaceshipTest(new Spaceship());
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == timer) {
-      clock1.update();
-      clock2.update();
+      spaceship.update();
       repaint();
     }
   }

@@ -19,7 +19,7 @@ public class Clock extends PhysicalObject {
   private double clockDegrees = 0;
 
   public Clock() {
-    this(30, 30, 50, 50, 0, 0);
+    this(300, 30, 50, 50, 0, 0);
   }
 
   public Clock(double x, double y, int width, int height, double vx, double vy) {
@@ -42,8 +42,7 @@ public class Clock extends PhysicalObject {
   @Override
   public void paint(Graphics g) {
     g.setColor(Color.BLACK);
-    g.drawString(getName(), (int) x, (int) y);
-    g.drawOval((int) x, (int) y, (int) getWidth(), (int) getHeight());
+    g.drawOval(getX(), getY(), getWidth(), getHeight());
     g.drawLine(getCenter().x, getCenter().y,
         (int) (getCenter().x + handLength*sin(toRadians(clockDegrees))),
         (int) (getCenter().y - handLength*cos(toRadians(clockDegrees))));
@@ -51,11 +50,13 @@ public class Clock extends PhysicalObject {
 
   @Override
   public void reset() {
+    super.reset();
     clockDegrees = 0;
   }
 
   @Override
   public void update() {
+    super.update();
     clockDegrees = (clockDegrees + gamma(getSpeed())*CLOCK_SPEED) % 360;
   }
 }

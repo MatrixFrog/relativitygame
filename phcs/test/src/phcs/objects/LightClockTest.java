@@ -26,7 +26,9 @@ public class LightClockTest extends JFrame implements ActionListener {
       lightClock.paint(g);
     }
   };
+
   public LightClockTest(LightClock lightClock) {
+    setTitle(getClass().getSimpleName());
     this.lightClock = lightClock;
 
     setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));

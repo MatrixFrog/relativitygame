@@ -29,6 +29,7 @@ public class TunnelTest extends JFrame implements ActionListener {
   };
 
   public TunnelTest(Tunnel tunnel) {
+    setTitle(getClass().getSimpleName());
     this.tunnel = tunnel;
 
     setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));

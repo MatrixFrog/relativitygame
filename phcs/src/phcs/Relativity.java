@@ -1,6 +1,7 @@
 package phcs;
 
 import static java.lang.Math.sqrt;
+import static util.MathUtils.sq;
 import static util.swingutils.SwingUtils.useDefaultLookAndFeel;
 import static util.swingutils.SwingUtils.useDialogExceptionHandler;
 
@@ -24,7 +25,8 @@ import phcs.objects.PhysicalObject;
 
 public class Relativity extends JFrame implements ActionListener {
 
-  private RelativityLevel level = RelativityLevel.getLevel1(); // TODO for now
+  // TODO level loading system
+  private RelativityLevel level = RelativityLevel.createSpaceshipInTunnelLevel();
 
   private Timer timer = new Timer(5, this);
   private JButton goButton = new JButton("Go");
@@ -100,7 +102,11 @@ public class Relativity extends JFrame implements ActionListener {
   }
 
   public static double gamma(double speed) {
-    return 1/sqrt(1 - speed * speed);
+    return 1/sqrt(1 - sq(speed));
+  }
+
+  public static double inverseGamma(double gamma) {
+    return sqrt(1 - 1/sq(gamma));
   }
 
   @Override

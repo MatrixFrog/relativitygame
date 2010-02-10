@@ -2,17 +2,20 @@ package phcs.objects;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
 
 import javax.swing.JPanel;
 
 /**
  * A tunnel with gates on either end that can open or close. The player can decide
- * the tunnel's initial state and at what time they want the tunnel to open or close.
+ * the tunnel's initial state and at what time(s) they want the tunnel to open or close.
  */
+// TODO design a control system for the gates.
 public class Tunnel extends PhysicalObject {
 
-  private boolean leftGateOpen;
-  private boolean rightGateOpen;
+  private boolean leftGateOpen = true;
+  private boolean rightGateOpen = true;
 
   public Tunnel() {
     this(300, 300, 100, 60, 0, 0);
@@ -23,12 +26,6 @@ public class Tunnel extends PhysicalObject {
   }
 
   @Override
-  public JPanel getControlPanel() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public boolean isControllable() {
     return isVelocityEditable() || isLeftGateEditable() || isRightGateEditable();
   }
@@ -36,34 +33,43 @@ public class Tunnel extends PhysicalObject {
   @Override
   public void paint(Graphics g) {
     g.setColor(Color.BLACK);
-    g.drawLine((int) x, (int) y, (int) (x+getWidth()),(int)  y);
-    g.drawLine((int) x, (int) (y+getHeight()), (int) (x + getWidth()),(int) (y+getHeight()));
+    g.drawLine(getX(), getY(), (getX()+getWidth()),getY());
+    g.drawLine(getX(), (getY()+getHeight()), (getX() + getWidth()),(getY()+getHeight()));
     paintLeftGate(g);
     paintRightGate(g);
   }
 
+  @Override
+  public JPanel getControlPanel() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
   private void paintLeftGate(Graphics g) {
-    if (isLeftGateOpen()) {
-      g.drawLine((int) x, (int) (y-getHeight()), (int) x, (int) y);
-    }
-    else {
-      g.drawLine((int) x, (int) y, (int) x, (int) (y+getHeight()));
-    }
+    paintGate(g, true, leftGateOpen);
   }
 
   private void paintRightGate(Graphics g) {
-    if (isRightGateOpen()) {
-      g.drawLine((int) (x+getWidth()), (int) (y-getHeight()), (int) (x+getWidth()), (int) y);
-    }
-    else {
-      g.drawLine((int) (x+getWidth()), (int) y, (int) (x+getWidth()), (int) (y+getHeight()));
-    }
+    paintGate(g, false, rightGateOpen);
   }
 
-  @Override
-  public void update() {
-    // TODO Auto-generated method stub
+  private void paintGate(Graphics g, boolean left, boolean open) {
+    g.setColor(left ? Color.BLUE : Color.RED);
+    int gateX = left ? getX() : getX() + getWidth();
 
+    g.fillOval(gateX-2, getY()-2, 4, 4);
+    g.fillOval(gateX-2, getY()+getHeight()-2, 4, 4);
+    if (open) {
+      int openX = left ? gateX - getHeight()/2 : gateX + getHeight()/2;
+      Line2D upperGate = new Line2D.Double(gateX, y, openX, y);
+      Line2D lowerGate = new Line2D.Double(gateX, y+getHeight(), openX, y+getHeight());
+
+      ((Graphics2D) g).draw(upperGate);
+      ((Graphics2D) g).draw(lowerGate);
+    }
+    else {
+      g.drawLine(gateX, getY(), gateX, (getY()+getHeight()));
+    }
   }
 
   public void toggleLeftGate() {
@@ -75,21 +81,13 @@ public class Tunnel extends PhysicalObject {
   }
 
   private boolean isLeftGateEditable() {
-    // TODO Auto-generated method stub
+    // TODO method stub
     return false;
   }
 
   private boolean isRightGateEditable() {
-    // TODO Auto-generated method stub
+    // TODO method stub
     return false;
-  }
-
-  private boolean isLeftGateOpen() {
-    return leftGateOpen;
-  }
-
-  private boolean isRightGateOpen() {
-    return rightGateOpen;
   }
 
 }

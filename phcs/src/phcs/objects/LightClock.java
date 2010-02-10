@@ -83,9 +83,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
 
   @Override
   public void update() {
-    x += vx;
-    y += vy;
-
+    super.update();
     for (Flash flash : flashes) {
       if (flash.getY() >= this.getBottomY()) {
         flash.reflectVertical();

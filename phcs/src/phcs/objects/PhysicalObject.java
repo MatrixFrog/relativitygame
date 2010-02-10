@@ -29,9 +29,7 @@ public abstract class PhysicalObject {
   protected double vx, vy;
 
   private String name = "";
-
   private boolean velocityEditable = false;
-
   private boolean running;
 
   /**
@@ -54,13 +52,17 @@ public abstract class PhysicalObject {
 
   /**
    * All the actions that should occur once per timestep belong in this method.
+   * If this is overridden in subclasses, they must call <tt>super.timestep();</tt>
    */
-  public abstract void update();
+  public void update() {
+    x += vx;
+    y += vy;
+  }
 
   /**
    * Subclasses should override this method to contain any actions that should
    * happen when the simulation containing this object is reset. The overriding method
-   * should start with super.reset()
+   * should start with <tt>super.reset()</tt>
    */
   public void reset() {
     running = false;
@@ -76,6 +78,8 @@ public abstract class PhysicalObject {
   public void go() {
     running = true;
   }
+
+  // TODO make a similar system for allowing/disallowing the setting of the object's initial position
 
   public void setVelocity(double vx, double vy) {
     if (velocityEditable) {
@@ -120,7 +124,7 @@ public abstract class PhysicalObject {
   }
 
   public Point getCenter() {
-    return new Point((int) (x + getWidth() / 2), (int) (y + getHeight() / 2));
+    return new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
   }
 
   /**
@@ -130,6 +134,7 @@ public abstract class PhysicalObject {
    *         panel should already have the necessary
    *         ActionListeners/ChangeListeners/etc. installed.
    */
+  // TODO this is ugly and weird
   public abstract JPanel getControlPanel();
 
   public abstract boolean isControllable();
@@ -147,16 +152,30 @@ public abstract class PhysicalObject {
     return name;
   }
 
-  public double getWidth() {
+  public int getWidth() {
     if (running) {
-      return width / gamma(vx);
+      return (int) (width / gamma(vx));
     }
     else {
-      return width;
+      return (int) width;
     }
   }
 
-  public double getHeight() {
-    return height;
+  public int getHeight() {
+    return (int) height;
+  }
+
+  /**
+   * Note: This returns an int even though the variable is stored as a double.
+   */
+  public int getX() {
+    return (int) x;
+  }
+
+  /**
+   * Note: This returns an int even though the variable is stored as a double.
+   */
+  public int getY() {
+    return (int) y;
   }
 }
