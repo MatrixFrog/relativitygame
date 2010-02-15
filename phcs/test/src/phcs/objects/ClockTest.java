@@ -45,7 +45,6 @@ public class ClockTest extends JFrame implements ActionListener {
     new ClockTest();
   }
 
-  @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == timer) {
       clock1.update();

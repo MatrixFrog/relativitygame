@@ -56,7 +56,6 @@ public class TunnelTest extends JFrame implements ActionListener {
     new TunnelTest(new Tunnel());
   }
 
-  @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == timer) {
       tunnel.update();

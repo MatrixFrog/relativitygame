@@ -70,7 +70,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
   @Override
   public void paint(Graphics g) {
     Graphics2D g2 = (Graphics2D) g;
-    Rectangle r = new Rectangle((int) x, (int) y, (int) getWidth(), (int) getHeight());
+    Rectangle r = new Rectangle((int) x, (int) y, getWidth(), getHeight());
     g2.setColor(Color.BLACK);
     g2.draw(r);
 
@@ -134,7 +134,6 @@ public class LightClock extends PhysicalObject implements ChangeListener {
     }
   }
 
-  @Override
   public void stateChanged(ChangeEvent e) {
     setVelocity(((double) ((JSlider) e.getSource()).getValue()) / 100, 0);
   }

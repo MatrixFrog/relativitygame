@@ -20,13 +20,17 @@ import javax.swing.Timer;
 
 import phcs.objects.PhysicalObject;
 
-// TODO allow for a different mapping of (x,y) -> actual pixels
 // TODO allow user to watch the simulation from any reference frame
+// TODO make this run on aludra
+
+// TODO allow for a different mapping of (x,y) -> actual pixels
+// TODO show this to Dr. Bars, Dr. Bickers
+// TODO make time dilation more "automatic"
 
 public class Relativity extends JFrame implements ActionListener {
 
   // TODO level loading system
-  private RelativityLevel level = RelativityLevel.createSpaceshipInTunnelLevel();
+  private RelativityLevel level = RelativityLevel.createLightClocksOnTrainLevel();
 
   private Timer timer = new Timer(5, this);
   private JButton goButton = new JButton("Go");
@@ -109,7 +113,6 @@ public class Relativity extends JFrame implements ActionListener {
     return sqrt(1 - 1/sq(gamma));
   }
 
-  @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == goButton) {
       go();

@@ -50,7 +50,6 @@ public class LightClockTest extends JFrame implements ActionListener {
     new LightClockTest(new LightClock());
   }
 
-  @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == timer) {
       lightClock.update();

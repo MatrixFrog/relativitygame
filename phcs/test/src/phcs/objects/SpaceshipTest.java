@@ -45,7 +45,6 @@ public class SpaceshipTest extends JFrame implements ActionListener {
     new SpaceshipTest(new Spaceship());
   }
 
-  @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == timer) {
       spaceship.update();

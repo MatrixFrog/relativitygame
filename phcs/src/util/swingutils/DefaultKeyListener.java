@@ -8,15 +8,15 @@ import java.awt.event.KeyListener;
  * your KeyListener can extend this class instead of implementing all three KeyListener methods.
  */
 public abstract class DefaultKeyListener implements KeyListener {
-  @Override public void keyPressed(KeyEvent e) {
+  public void keyPressed(KeyEvent e) {
     // do nothing
   }
 
-  @Override public void keyReleased(KeyEvent e) {
+  public void keyReleased(KeyEvent e) {
     // do nothing
   }
 
-  @Override public void keyTyped(KeyEvent e) {
+  public void keyTyped(KeyEvent e) {
     // do nothing
   }
 }

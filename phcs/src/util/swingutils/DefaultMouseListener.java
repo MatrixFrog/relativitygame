@@ -8,23 +8,23 @@ import java.awt.event.MouseListener;
  * your MouseListener can extend this class instead of implementing all the MouseListener methods.
  */
 public class DefaultMouseListener implements MouseListener {
-  @Override public void mouseClicked(MouseEvent e) {
+  public void mouseClicked(MouseEvent e) {
     // do nothing
   }
 
-  @Override public void mouseEntered(MouseEvent e) {
+  public void mouseEntered(MouseEvent e) {
     // do nothing
   }
 
-  @Override public void mouseExited(MouseEvent e) {
+  public void mouseExited(MouseEvent e) {
     // do nothing
   }
 
-  @Override public void mousePressed(MouseEvent e) {
+  public void mousePressed(MouseEvent e) {
     // do nothing
   }
 
-  @Override public void mouseReleased(MouseEvent e) {
+  public void mouseReleased(MouseEvent e) {
     // do nothing
   }
 }
