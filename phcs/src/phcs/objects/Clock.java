@@ -11,10 +11,12 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import phcs.PhysicalObject;
+
 public class Clock extends PhysicalObject {
 
   /** How fast the clock runs in its own rest frame, in degrees per timestep */
-  private static final int CLOCK_SPEED = 2;
+  private static final double CLOCK_SPEED = 2;
   private final double handLength;
   private double clockDegrees = 0;
 

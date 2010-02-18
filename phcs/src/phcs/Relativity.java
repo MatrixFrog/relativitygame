@@ -13,40 +13,53 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import phcs.objects.PhysicalObject;
-
-// TODO allow user to watch the simulation from any reference frame
-// TODO make this run on aludra
-
-// TODO allow for a different mapping of (x,y) -> actual pixels
-// TODO show this to Dr. Bars, Dr. Bickers
-// TODO make time dilation more "automatic"
 
 public class Relativity extends JFrame implements ActionListener {
 
-  // TODO level loading system
   private RelativityLevel level = RelativityLevel.createLightClocksOnTrainLevel();
 
-  private Timer timer = new Timer(5, this);
-  private JButton goButton = new JButton("Go");
-  private JButton resetButton = new JButton("Reset");
+  private Timer timer;
+  private JButton transformButton1 = new JButton("Transform (+)");
+  private JButton transformButton2 = new JButton("Transform (-)");
 
-  private JPanel controlPanel = new JPanel();
+  private ReferenceFrame vt = new ReferenceFrame(0.5, 0);
+
+  //private JPanel controlPanel = new JPanel();
   private List<JPanel> objectControlPanels = new ArrayList<JPanel>();
+
+  private Action goAction = new AbstractAction("Go") {
+    public void actionPerformed(ActionEvent e) {
+      go();
+    }
+  };
+
+  private Action resetAction = new AbstractAction("Reset") {
+    public void actionPerformed(ActionEvent e) {
+      reset();
+    }
+  };
+
+  private Action timestepAction = new AbstractAction("timestep") {
+    public void actionPerformed(ActionEvent arg0) {
+      level.update();
+      repaint();
+    }
+  };
 
   private JPanel createSimulationPanel() {
     JPanel simulationPanel = new JPanel() {
       @Override
       public void paint(Graphics g) {
-        super.paint(g);
-        for (PhysicalObject obj : level.getSimulationObjects()) {
-          obj.paint(g);
-        }
+        level.paint(g);
       }
     };
     return simulationPanel;
@@ -60,8 +73,7 @@ public class Relativity extends JFrame implements ActionListener {
     setSize(1024, 768);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-    goButton.addActionListener(this);
-    resetButton.addActionListener(this);
+    initMenu();
 
     gbc.gridx = gbc.gridy = 0;
     gbc.fill = GridBagConstraints.BOTH;
@@ -70,15 +82,31 @@ public class Relativity extends JFrame implements ActionListener {
 
     gbc.gridy++;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    initControlPanel();
-    this.add(controlPanel, gbc);
+    this.add(createControlPanel(), gbc);
 
     reset();
+    timer = new Timer(5, timestepAction);
     setVisible(true);
   }
 
-  private void initControlPanel() {
-    controlPanel.removeAll();
+  private void initMenu() {
+    JMenuBar menuBar = new JMenuBar();
+
+    JMenu simulationMenu = new JMenu("Simulation");
+    simulationMenu.add(goAction);
+    simulationMenu.add(resetAction);
+    menuBar.add(simulationMenu);
+
+    setJMenuBar(menuBar);
+  }
+
+  private JPanel createControlPanel() {
+    JPanel controlPanel = new JPanel();
+
+    JButton goButton = new JButton(goAction);
+    JButton resetButton = new JButton(resetAction);
+    transformButton1.addActionListener(this);
+    transformButton2.addActionListener(this);
 
     controlPanel.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
@@ -88,10 +116,14 @@ public class Relativity extends JFrame implements ActionListener {
     controlPanel.add(goButton, gbc);
     gbc.gridx++;
     controlPanel.add(resetButton, gbc);
+    gbc.gridx++;
+    controlPanel.add(transformButton1, gbc);
+    gbc.gridx++;
+    controlPanel.add(transformButton2, gbc);
 
     gbc.gridx = 0;
     gbc.gridy = 1;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = 4;
     gbc.fill = GridBagConstraints.NONE;
 
     // Add the individual objects' control panels to the main control panel
@@ -103,6 +135,7 @@ public class Relativity extends JFrame implements ActionListener {
         gbc.gridy++;
       }
     }
+    return controlPanel;
   }
 
   public static double gamma(double speed) {
@@ -114,35 +147,35 @@ public class Relativity extends JFrame implements ActionListener {
   }
 
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == goButton) {
-      go();
-    }
-    if (e.getSource() == resetButton) {
-      reset();
-    }
-    else if (e.getSource() == timer) {
-      for (PhysicalObject obj : level.getSimulationObjects()) {
-        obj.update();
-      }
+    if (e.getSource() == timer) {
+      level.update();
       repaint();
+    }
+    else if (e.getSource() == transformButton1) {
+      level.setFrame(vt);
+    }
+    else if (e.getSource() == transformButton2) {
+      level.setFrame(vt.inverted());
     }
   }
 
   private void go() {
     setControlsEnabled(false);
-    goButton.setEnabled(false);
-    resetButton.setEnabled(true);
+    goAction.setEnabled(false);
+    resetAction.setEnabled(true);
+    transformButton1.setEnabled(false);
+    transformButton2.setEnabled(false);
     timer.start();
     level.go();
   }
 
   private void reset() {
-    for (PhysicalObject obj : level.getSimulationObjects()) {
-      obj.reset();
-    }
+    level.reset();
     timer.stop();
-    goButton.setEnabled(true);
-    resetButton.setEnabled(false);
+    goAction.setEnabled(true);
+    resetAction.setEnabled(false);
+    transformButton1.setEnabled(true);
+    transformButton2.setEnabled(true);
     setControlsEnabled(true);
     repaint();
   }

@@ -1,4 +1,4 @@
-package phcs.objects;
+package phcs;
 
 import static java.lang.Math.hypot;
 import static phcs.Relativity.gamma;
@@ -8,7 +8,6 @@ import java.awt.Point;
 
 import javax.swing.JPanel;
 
-import phcs.LawsOfPhysicsException;
 
 /**
  * An instance of this class is a physical object such as a light-clock or a
@@ -52,7 +51,7 @@ public abstract class PhysicalObject {
 
   /**
    * All the actions that should occur once per timestep belong in this method.
-   * If this is overridden in subclasses, they must call <tt>super.timestep();</tt>
+   * If this is overridden in subclasses, they must call <tt>super.update();</tt>
    */
   public void update() {
     x += vx;

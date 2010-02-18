@@ -5,6 +5,8 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import phcs.PhysicalObject;
+
 public class Spaceship extends PhysicalObject {
 
   public Spaceship() {

@@ -17,6 +17,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import phcs.Flash;
+import phcs.PhysicalObject;
 import util.swingutils.RecursiveEnablePanel;
 
 public class LightClock extends PhysicalObject implements ChangeListener {

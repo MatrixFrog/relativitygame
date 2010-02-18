@@ -7,6 +7,8 @@ import java.awt.geom.Line2D;
 
 import javax.swing.JPanel;
 
+import phcs.PhysicalObject;
+
 /**
  * A tunnel with gates on either end that can open or close. The player can decide
  * the tunnel's initial state and at what time(s) they want the tunnel to open or close.
