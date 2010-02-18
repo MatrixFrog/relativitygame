@@ -18,6 +18,7 @@ public class RelativityLevel {
 
   private List<PhysicalObject> simulationObjects = new ArrayList<PhysicalObject>();
   private ReferenceFrame referenceFrame = ReferenceFrame.DEFAULT_FRAME;
+  private boolean running;
 
   public void addSimulationObject(PhysicalObject obj) {
     simulationObjects.add(obj);
@@ -31,6 +32,7 @@ public class RelativityLevel {
    * This is what gets called when the player presses the "Go" button in the UI
    */
   public void go() {
+    running = true;
     for (PhysicalObject obj : simulationObjects) {
       referenceFrame.transformVelocity(obj);
     }
@@ -52,16 +54,20 @@ public class RelativityLevel {
     for (PhysicalObject obj : simulationObjects) {
       referenceFrame.untransformVelocity(obj);
     }
+    running = false;
   }
 
   /**
    * Indicates that we want to view the level in the specified reference frame.
-   *
    */
   public void setFrame(ReferenceFrame referenceFrame) {
     if (referenceFrame.vy != 0) {
       throw new UnsupportedOperationException("Reference frames with a vertical component are not yet supported.");
     }
+    if (running) {
+      throw new UnsupportedOperationException("You can't switch reference frames while the simulation is running.");
+    }
+
     this.referenceFrame = referenceFrame;
   }
 

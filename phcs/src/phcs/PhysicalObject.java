@@ -31,6 +31,9 @@ public abstract class PhysicalObject {
   private boolean velocityEditable = false;
   private boolean running;
 
+  // TODO this is storing the same information stored in vx, vy so it might be redundant
+  private ReferenceFrame restFrame = new ReferenceFrame(0, 0);
+
   /**
    * Create an object with the given position, size, and speed.
    */
@@ -102,8 +105,8 @@ public abstract class PhysicalObject {
     if (hypot(vx, vy) > 1) {
       throw new LawsOfPhysicsException("Nothing can travel faster than light!");
     }
-    this.vx = vx;
-    this.vy = vy;
+    restFrame.vx = this.vx = vx;
+    restFrame.vy = this.vy = vy;
   }
 
   /**
@@ -145,6 +148,16 @@ public abstract class PhysicalObject {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  /**
+   * While there are an infinite number of frames in which any object is at rest,
+   * this simply returns the one with the same origin as the primary frame.
+   *
+   * @return the reference frame in which this object is at rest.
+   */
+  public ReferenceFrame getRestFrame() {
+    return restFrame;
   }
 
   public String getName() {

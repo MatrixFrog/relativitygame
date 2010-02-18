@@ -9,7 +9,6 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +22,29 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 
-public class Relativity extends JFrame implements ActionListener {
+public class Relativity extends JFrame {
 
   private RelativityLevel level = RelativityLevel.createLightClocksOnTrainLevel();
 
   private Timer timer;
-  private JButton transformButton1 = new JButton("Transform (+)");
-  private JButton transformButton2 = new JButton("Transform (-)");
 
-  private ReferenceFrame vt = new ReferenceFrame(0.5, 0);
-
-  //private JPanel controlPanel = new JPanel();
   private List<JPanel> objectControlPanels = new ArrayList<JPanel>();
+
+  // TODO disable all instances of this type of action while simulation is running
+  private class SetReferenceFrameAction extends AbstractAction {
+
+    private PhysicalObject obj;
+
+    public SetReferenceFrameAction(PhysicalObject obj) {
+      this.obj = obj;
+      this.putValue(NAME, obj.getName());
+    }
+
+    public void actionPerformed(ActionEvent e) {
+      level.setFrame(obj.getRestFrame());
+      System.out.format("level.setFrame(%s)%n", obj.getRestFrame());
+    }
+  }
 
   private Action goAction = new AbstractAction("Go") {
     public void actionPerformed(ActionEvent e) {
@@ -84,8 +94,8 @@ public class Relativity extends JFrame implements ActionListener {
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.add(createControlPanel(), gbc);
 
-    reset();
     timer = new Timer(5, timestepAction);
+    reset();
     setVisible(true);
   }
 
@@ -93,9 +103,16 @@ public class Relativity extends JFrame implements ActionListener {
     JMenuBar menuBar = new JMenuBar();
 
     JMenu simulationMenu = new JMenu("Simulation");
+    menuBar.add(simulationMenu);
     simulationMenu.add(goAction);
     simulationMenu.add(resetAction);
-    menuBar.add(simulationMenu);
+
+    JMenu referenceFrameMenu = new JMenu("Reference Frame");
+    simulationMenu.add(referenceFrameMenu);
+    for (PhysicalObject obj : level.getSimulationObjects()) {
+      Action setReferenceFrameAction = new SetReferenceFrameAction(obj);
+      referenceFrameMenu.add(setReferenceFrameAction);
+    }
 
     setJMenuBar(menuBar);
   }
@@ -105,8 +122,6 @@ public class Relativity extends JFrame implements ActionListener {
 
     JButton goButton = new JButton(goAction);
     JButton resetButton = new JButton(resetAction);
-    transformButton1.addActionListener(this);
-    transformButton2.addActionListener(this);
 
     controlPanel.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
@@ -116,10 +131,6 @@ public class Relativity extends JFrame implements ActionListener {
     controlPanel.add(goButton, gbc);
     gbc.gridx++;
     controlPanel.add(resetButton, gbc);
-    gbc.gridx++;
-    controlPanel.add(transformButton1, gbc);
-    gbc.gridx++;
-    controlPanel.add(transformButton2, gbc);
 
     gbc.gridx = 0;
     gbc.gridy = 1;
@@ -146,25 +157,10 @@ public class Relativity extends JFrame implements ActionListener {
     return sqrt(1 - 1/sq(gamma));
   }
 
-  public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == timer) {
-      level.update();
-      repaint();
-    }
-    else if (e.getSource() == transformButton1) {
-      level.setFrame(vt);
-    }
-    else if (e.getSource() == transformButton2) {
-      level.setFrame(vt.inverted());
-    }
-  }
-
   private void go() {
     setControlsEnabled(false);
     goAction.setEnabled(false);
     resetAction.setEnabled(true);
-    transformButton1.setEnabled(false);
-    transformButton2.setEnabled(false);
     timer.start();
     level.go();
   }
@@ -174,8 +170,6 @@ public class Relativity extends JFrame implements ActionListener {
     timer.stop();
     goAction.setEnabled(true);
     resetAction.setEnabled(false);
-    transformButton1.setEnabled(true);
-    transformButton2.setEnabled(true);
     setControlsEnabled(true);
     repaint();
   }

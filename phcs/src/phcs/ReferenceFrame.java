@@ -25,7 +25,7 @@ public class ReferenceFrame {
   }
 
   public void transformVelocity(PhysicalObject obj) {
-    obj.vx = (obj.vx + this.vx) / (1 + obj.vx * this.vx);
+    obj.vx = (obj.vx - this.vx) / (1 - obj.vx * this.vx);
   }
 
   /**
@@ -33,5 +33,10 @@ public class ReferenceFrame {
    */
   public void untransformVelocity(PhysicalObject obj) {
     this.inverted().transformVelocity(obj);
+  }
+
+  @Override
+  public String toString() {
+    return String.format("v=(%.2f, %.2f)", vx, vy);
   }
 }
