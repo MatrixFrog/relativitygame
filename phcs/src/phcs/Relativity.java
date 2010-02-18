@@ -42,7 +42,6 @@ public class Relativity extends JFrame {
 
     public void actionPerformed(ActionEvent e) {
       level.setFrame(obj.getRestFrame());
-      System.out.format("level.setFrame(%s)%n", obj.getRestFrame());
     }
   }
 
@@ -134,18 +133,10 @@ public class Relativity extends JFrame {
 
     gbc.gridx = 0;
     gbc.gridy = 1;
-    gbc.gridwidth = 4;
+    gbc.gridwidth = 2;
     gbc.fill = GridBagConstraints.NONE;
+    controlPanel.add(level.getControlPanel(), gbc);
 
-    // Add the individual objects' control panels to the main control panel
-    for (PhysicalObject obj : level.getSimulationObjects()) {
-      if (obj.isControllable()) {
-        JPanel objectControlPanel = obj.getControlPanel();
-        objectControlPanels.add(objectControlPanel);
-        controlPanel.add(objectControlPanel, gbc);
-        gbc.gridy++;
-      }
-    }
     return controlPanel;
   }
 

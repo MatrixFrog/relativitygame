@@ -10,15 +10,12 @@ import java.awt.Rectangle;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import phcs.Flash;
 import phcs.PhysicalObject;
-import util.swingutils.RecursiveEnablePanel;
 
 public class LightClock extends PhysicalObject implements ChangeListener {
 
@@ -111,36 +108,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
     flash();
   }
 
-  // TODO move some of this logic into the PhysicalObject class (?)
-  @Override
-  public JPanel getControlPanel() {
-    if (isVelocityEditable()) {
-      JPanel ctrlPanel = new RecursiveEnablePanel();
-      JSlider slider = new JSlider(0, 100, 0);
-      slider.setMajorTickSpacing(5);
-      slider.setMinorTickSpacing(1);
-      slider.setSnapToTicks(true);
-      slider.setPaintTicks(true);
-      slider.setPaintLabels(true);
-      slider.addChangeListener(this);
-
-      ctrlPanel.add(slider);
-
-      ctrlPanel.setBorder(BorderFactory.createTitledBorder(getName()));
-
-      return ctrlPanel;
-    }
-    else {
-      return null;
-    }
-  }
-
   public void stateChanged(ChangeEvent e) {
     setVelocity(((double) ((JSlider) e.getSource()).getValue()) / 100, 0);
-  }
-
-  @Override
-  public boolean isControllable() {
-    return isVelocityEditable();
   }
 }

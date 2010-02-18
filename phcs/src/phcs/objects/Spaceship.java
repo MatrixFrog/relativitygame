@@ -3,8 +3,6 @@ package phcs.objects;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import javax.swing.JPanel;
-
 import phcs.PhysicalObject;
 
 public class Spaceship extends PhysicalObject {
@@ -15,16 +13,6 @@ public class Spaceship extends PhysicalObject {
 
   public Spaceship(double x, double y, double width, double height, double vx, double vy) {
     super(x, y, width, height, vx, vy);
-  }
-
-  @Override
-  public JPanel getControlPanel() {
-    return null;
-  }
-
-  @Override
-  public boolean isControllable() {
-    return false;
   }
 
   @Override
@@ -42,8 +30,5 @@ public class Spaceship extends PhysicalObject {
     g.fillOval(tailX, getY(), getWidth() - tailWidth, getHeight());
     g.setColor(Color.BLACK);
     g.drawOval(tailX, getY(), getWidth() - tailWidth, getHeight());
-
-    //g.drawRect(getX(), getY(), getWidth(), getHeight());
-    //g.drawString("SPACESHIP", getX()+getWidth()/2, getY()+getHeight()/2);
   }
 }

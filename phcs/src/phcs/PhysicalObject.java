@@ -6,8 +6,6 @@ import static phcs.Relativity.gamma;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import javax.swing.JPanel;
-
 
 /**
  * An instance of this class is a physical object such as a light-clock or a
@@ -28,7 +26,6 @@ public abstract class PhysicalObject {
   protected double vx, vy;
 
   private String name = "";
-  private boolean velocityEditable = false;
   private boolean running;
 
   // TODO this is storing the same information stored in vx, vy so it might be redundant
@@ -43,7 +40,7 @@ public abstract class PhysicalObject {
     this.initialY = y;
     this.width = width;
     this.height = height;
-    setVelocityInternal(vx, vy);
+    setVelocity(vx, vy);
     this.reset();
   }
 
@@ -83,21 +80,11 @@ public abstract class PhysicalObject {
 
   // TODO make a similar system for allowing/disallowing the setting of the object's initial position
 
-  public void setVelocity(double vx, double vy) {
-    if (velocityEditable) {
-      setVelocityInternal(vx, vy);
-    }
-    else {
-      throw new UnsupportedOperationException(
-          "This object does not allow its speed to be changed.");
-    }
-  }
-
   /**
    * Set the velocity without checking the velocityEditable flag. For internal
    * use only.
    */
-  private void setVelocityInternal(double vx, double vy) {
+  public void setVelocity(double vx, double vy) {
     if (vy != 0) {
       throw new UnsupportedOperationException(
           "For now, objects can only move horizontally.");
@@ -109,18 +96,6 @@ public abstract class PhysicalObject {
     restFrame.vy = this.vy = vy;
   }
 
-  /**
-   * @return true if the changing the velocity is allowed. It is false by
-   *         default.
-   */
-  public boolean isVelocityEditable() {
-    return velocityEditable;
-  }
-
-  public void setVelocityEditable(boolean speedEditable) {
-    this.velocityEditable = speedEditable;
-  }
-
   public double getSpeed() {
     return hypot(vx, vy);
   }
@@ -128,18 +103,6 @@ public abstract class PhysicalObject {
   public Point getCenter() {
     return new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
   }
-
-  /**
-   * @return A panel containing all the necessary controls for this object. If
-   *         the object is not controllable (i.e. if isControllable() returns
-   *         false), this method returns <tt>null</tt>. All the controls in the
-   *         panel should already have the necessary
-   *         ActionListeners/ChangeListeners/etc. installed.
-   */
-  // TODO this is ugly and weird
-  public abstract JPanel getControlPanel();
-
-  public abstract boolean isControllable();
 
   @Override
   public String toString() {

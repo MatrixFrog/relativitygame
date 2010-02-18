@@ -6,6 +6,10 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
+import phcs.gui.VelocitySlider;
 import phcs.objects.LightClock;
 import phcs.objects.Spaceship;
 import phcs.objects.Tunnel;
@@ -19,6 +23,7 @@ public class RelativityLevel {
   private List<PhysicalObject> simulationObjects = new ArrayList<PhysicalObject>();
   private ReferenceFrame referenceFrame = ReferenceFrame.DEFAULT_FRAME;
   private boolean running;
+  private JPanel controlPanel;
 
   public void addSimulationObject(PhysicalObject obj) {
     simulationObjects.add(obj);
@@ -71,6 +76,16 @@ public class RelativityLevel {
     this.referenceFrame = referenceFrame;
   }
 
+  public void paint(Graphics g) {
+    for (PhysicalObject obj : simulationObjects) {
+      obj.paint(g);
+    }
+  }
+
+  public JPanel getControlPanel() {
+    return controlPanel;
+  }
+
   public static RelativityLevel createLightClocksOnTrainLevel() {
     /*
     private String instructions = "Instructions: The light clock on the left is stationary,\n" +
@@ -79,36 +94,33 @@ public class RelativityLevel {
         "shows the clock's speed as a percentage of the speed of light.\n" +
         "Goal: Set the speed so that the light clock on the right makes a complete cycle in 5 seconds.";
      */
-    RelativityLevel level1 = new RelativityLevel();
+    RelativityLevel level = new RelativityLevel();
 
     PhysicalObject stationaryLightClock = new LightClock(430, 30);
     stationaryLightClock.setName("LC1");
-    level1.addSimulationObject(stationaryLightClock);
+    level.addSimulationObject(stationaryLightClock);
 
     PhysicalObject movingLightClock = new LightClock(500, 30);
     movingLightClock.setName("LC2");
-    movingLightClock.setVelocityEditable(true);
-    level1.addSimulationObject(movingLightClock);
+    level.addSimulationObject(movingLightClock);
 
-    return level1;
+    level.controlPanel = new JPanel();
+    level.controlPanel.add(new VelocitySlider(movingLightClock));
+    level.controlPanel.setBorder(BorderFactory.createTitledBorder(movingLightClock.getName()));
+
+    return level;
   }
 
   public static RelativityLevel createSpaceshipInTunnelLevel() {
-    RelativityLevel level2 = new RelativityLevel();
+    RelativityLevel level = new RelativityLevel();
 
     PhysicalObject tunnel = new Tunnel(500, 285, 50, 30, 0, 0);
-    level2.addSimulationObject(tunnel);
+    level.addSimulationObject(tunnel);
 
     PhysicalObject spaceship = new Spaceship(30, 290, 100, 20, inverseGamma(2), 0);
-    level2.addSimulationObject(spaceship);
+    level.addSimulationObject(spaceship);
 
-    return level2;
-  }
-
-  public void paint(Graphics g) {
-    for (PhysicalObject obj : simulationObjects) {
-      obj.paint(g);
-    }
+    return level;
   }
 
 }

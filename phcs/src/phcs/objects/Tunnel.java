@@ -28,23 +28,12 @@ public class Tunnel extends PhysicalObject {
   }
 
   @Override
-  public boolean isControllable() {
-    return isVelocityEditable() || isLeftGateEditable() || isRightGateEditable();
-  }
-
-  @Override
   public void paint(Graphics g) {
     g.setColor(Color.BLACK);
     g.drawLine(getX(), getY(), (getX()+getWidth()),getY());
     g.drawLine(getX(), (getY()+getHeight()), (getX() + getWidth()),(getY()+getHeight()));
     paintLeftGate(g);
     paintRightGate(g);
-  }
-
-  @Override
-  public JPanel getControlPanel() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   private void paintLeftGate(Graphics g) {

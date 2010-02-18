@@ -30,18 +30,6 @@ public class Clock extends PhysicalObject {
   }
 
   @Override
-  public JPanel getControlPanel() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public boolean isControllable() {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
   public void paint(Graphics g) {
     g.setColor(Color.BLACK);
     g.drawOval(getX(), getY(), getWidth(), getHeight());
