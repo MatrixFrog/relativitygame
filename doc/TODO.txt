@@ -1,0 +1,14 @@
+Big picture TODO list, separate from the "// TODO"s in the code
+
+* allow for a different mapping of (x,y) -> actual pixels
+* edit the ant buildfile so that the code can be compiled for 1.5 anywhere
+* show this to Dr. Bars, Dr. Bickers
+* make time dilation more "automatic" so that each object doesn't have to figure it out on its own
+  -- possible way of implementing: have PhysObj.update() just call timeIncrement(number) which
+     is overridden in all the subclasses, e.g.
+     
+     public void timeIncrement(double time) {
+       clockDegrees += time*CLOCK_SPEED; 
+     }
+     
+     The argument will be determined by gamma. The subclasses never have to call gamma()
