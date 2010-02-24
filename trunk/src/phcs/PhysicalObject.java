@@ -1,7 +1,8 @@
 package phcs;
 
 import static java.lang.Math.hypot;
-import static phcs.Relativity.gamma;
+import static java.lang.Math.sqrt;
+import static util.MathUtils.sq;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -56,6 +57,17 @@ public abstract class PhysicalObject {
   public void update() {
     x += vx;
     y += vy;
+    timeIncrement(1/gamma(getSpeed()));
+  }
+
+  /**
+   * If an object is clock-like in any way (i.e. if it is supposed to change as
+   * time passes, in any way other than moving through space at a constant velocity)
+   * then the subclass should override this method. The time dilation effect is
+   * automatically taken into account in {@link #update()}.
+   */
+  public void timeIncrement(double time) {
+    // no action
   }
 
   /**
@@ -76,6 +88,19 @@ public abstract class PhysicalObject {
    */
   public void go() {
     running = true;
+  }
+
+  public static double gamma(double speed) {
+    return 1/sqrt(1 - sq(speed));
+  }
+
+  public static double inverseGamma(double gamma) {
+    return sqrt(1 - 1/sq(gamma));
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%s %s at (%.2f,%.2f)", getClass().getSimpleName(), name, x, y);
   }
 
   // TODO make a similar system for allowing/disallowing the setting of the object's initial position
@@ -104,10 +129,6 @@ public abstract class PhysicalObject {
     return new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
   }
 
-  @Override
-  public String toString() {
-    return String.format("%s %s at (%.2f,%.2f)", getClass().getSimpleName(), name, x, y);
-  }
 
   public void setName(String name) {
     this.name = name;
