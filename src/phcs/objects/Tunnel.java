@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 
-import javax.swing.JPanel;
-
 import phcs.PhysicalObject;
 
 /**
@@ -69,16 +67,6 @@ public class Tunnel extends PhysicalObject {
 
   public void toggleRightGate() {
     rightGateOpen = !rightGateOpen;
-  }
-
-  private boolean isLeftGateEditable() {
-    // TODO method stub
-    return false;
-  }
-
-  private boolean isRightGateEditable() {
-    // TODO method stub
-    return false;
   }
 
 }
