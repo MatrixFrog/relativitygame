@@ -1,6 +1,6 @@
 package phcs;
 
-import static phcs.Relativity.inverseGamma;
+import static phcs.PhysicalObject.inverseGamma;
 
 import java.awt.Graphics;
 import java.util.ArrayList;

@@ -4,7 +4,6 @@ import static java.lang.Math.cos;
 import static java.lang.Math.min;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
-import static phcs.Relativity.gamma;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -43,8 +42,10 @@ public class Clock extends PhysicalObject {
   }
 
   @Override
-  public void update() {
-    super.update();
-    clockDegrees = (clockDegrees + gamma(getSpeed())*CLOCK_SPEED) % 360;
+  public void timeIncrement(double time) {
+    System.out.println("Clock.timeIncrement(" + time + ")");
+    clockDegrees = (clockDegrees + time*CLOCK_SPEED) % 360;
   }
+
+
 }

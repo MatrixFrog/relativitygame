@@ -1,7 +1,5 @@
 package phcs;
 
-import static java.lang.Math.sqrt;
-import static util.MathUtils.sq;
 import static util.swingutils.SwingUtils.useDefaultLookAndFeel;
 import static util.swingutils.SwingUtils.useDialogExceptionHandler;
 
@@ -64,6 +62,12 @@ public class Relativity extends JFrame {
     }
   };
 
+  private Action loadLevelAction = new AbstractAction() {
+    public void actionPerformed(ActionEvent arg0) {
+      // TODO show a "load level" dialog and then load the level
+    }
+  };
+
   private JPanel createSimulationPanel() {
     JPanel simulationPanel = new JPanel() {
       @Override
@@ -74,7 +78,6 @@ public class Relativity extends JFrame {
     return simulationPanel;
   }
 
-  // TODO create a loadLevel() method so that levels can be loaded at runtime
   public Relativity() {
     setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
@@ -100,6 +103,10 @@ public class Relativity extends JFrame {
 
   private void initMenu() {
     JMenuBar menuBar = new JMenuBar();
+
+    JMenu fileMenu = new JMenu("File");
+    menuBar.add(fileMenu);
+    fileMenu.add(loadLevelAction);
 
     JMenu simulationMenu = new JMenu("Simulation");
     menuBar.add(simulationMenu);
@@ -140,12 +147,9 @@ public class Relativity extends JFrame {
     return controlPanel;
   }
 
-  public static double gamma(double speed) {
-    return 1/sqrt(1 - sq(speed));
-  }
-
-  public static double inverseGamma(double gamma) {
-    return sqrt(1 - 1/sq(gamma));
+  private void loadLevel(RelativityLevel newLevel) {
+    // TODO re-create control panel and menu
+    level = newLevel;
   }
 
   private void go() {
