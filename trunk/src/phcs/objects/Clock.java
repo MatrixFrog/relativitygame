@@ -9,8 +9,6 @@ import static phcs.Relativity.gamma;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import javax.swing.JPanel;
-
 import phcs.PhysicalObject;
 
 public class Clock extends PhysicalObject {
