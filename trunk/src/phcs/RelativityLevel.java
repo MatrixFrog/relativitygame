@@ -9,10 +9,12 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import phcs.gui.TunnelController;
 import phcs.gui.VelocitySlider;
 import phcs.objects.LightClock;
 import phcs.objects.Spaceship;
 import phcs.objects.Tunnel;
+import util.swingutils.RecursiveEnablePanel;
 
 /**
  * An instance of this class represents one single "level" or "puzzle" to be solved.
@@ -114,11 +116,15 @@ public class RelativityLevel {
   public static RelativityLevel createSpaceshipInTunnelLevel() {
     RelativityLevel level = new RelativityLevel();
 
-    PhysicalObject tunnel = new Tunnel(500, 285, 50, 30, 0, 0);
+    Tunnel tunnel = new Tunnel(500, 285, 50, 30, 0, 0);
     level.addSimulationObject(tunnel);
 
-    PhysicalObject spaceship = new Spaceship(30, 290, 100, 20, inverseGamma(2), 0);
+    Spaceship spaceship = new Spaceship(30, 290, 100, 20, inverseGamma(2), 0);
     level.addSimulationObject(spaceship);
+
+    level.controlPanel = new RecursiveEnablePanel();
+    TunnelController tunnelController = new TunnelController(tunnel);
+    level.controlPanel.add(tunnelController);
 
     return level;
   }

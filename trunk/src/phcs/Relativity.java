@@ -7,8 +7,6 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -22,11 +20,9 @@ import javax.swing.Timer;
 
 public class Relativity extends JFrame {
 
-  private RelativityLevel level = RelativityLevel.createLightClocksOnTrainLevel();
+  private RelativityLevel level = RelativityLevel.createSpaceshipInTunnelLevel();
 
   private Timer timer;
-
-  private List<JPanel> objectControlPanels = new ArrayList<JPanel>();
 
   // TODO disable all instances of this type of action while simulation is running
   private class SetReferenceFrameAction extends AbstractAction {
@@ -34,8 +30,8 @@ public class Relativity extends JFrame {
     private PhysicalObject obj;
 
     public SetReferenceFrameAction(PhysicalObject obj) {
+      super(obj.getName());
       this.obj = obj;
-      this.putValue(NAME, obj.getName());
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -79,6 +75,7 @@ public class Relativity extends JFrame {
   }
 
   public Relativity() {
+    super("Relativity");
     setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.weightx = gbc.weighty = 1;
@@ -153,7 +150,7 @@ public class Relativity extends JFrame {
   }
 
   private void go() {
-    setControlsEnabled(false);
+    level.getControlPanel().setEnabled(false);
     goAction.setEnabled(false);
     resetAction.setEnabled(true);
     timer.start();
@@ -165,16 +162,9 @@ public class Relativity extends JFrame {
     timer.stop();
     goAction.setEnabled(true);
     resetAction.setEnabled(false);
-    setControlsEnabled(true);
+    level.getControlPanel().setEnabled(true);
     repaint();
   }
-
-  private void setControlsEnabled(boolean enable) {
-    for (JPanel objectCtrlPanel : objectControlPanels) {
-      objectCtrlPanel.setEnabled(enable);
-    }
-  }
-
 
   public static void main(String[] args) {
     useDefaultLookAndFeel();

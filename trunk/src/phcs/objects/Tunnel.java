@@ -11,18 +11,22 @@ import phcs.PhysicalObject;
  * A tunnel with gates on either end that can open or close. The player can decide
  * the tunnel's initial state and at what time(s) they want the tunnel to open or close.
  */
-// TODO design a control system for the gates.
 public class Tunnel extends PhysicalObject {
 
   private boolean leftGateOpen = true;
   private boolean rightGateOpen = true;
 
   public Tunnel() {
-    this(300, 300, 100, 60, 0, 0);
+    this(300, 100, 100, 60, 0, 0);
   }
 
   public Tunnel(double x, double y, double width, double height, double vx, double vy) {
     super(x, y, width, height, vx, vy);
+  }
+
+  @Override public void reset() {
+    super.reset();
+    leftGateOpen = rightGateOpen = true;
   }
 
   @Override

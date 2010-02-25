@@ -42,6 +42,8 @@ public abstract class PhysicalObject {
     this.width = width;
     this.height = height;
     setVelocity(vx, vy);
+    setName(getClass().getSimpleName());
+
     this.reset();
   }
 
@@ -129,7 +131,10 @@ public abstract class PhysicalObject {
     return new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
   }
 
-
+  /**
+   * Set the name of this object, which is used in several places in the GUI. If you don't
+   * call this method, the name will default to the name of the class.
+   */
   public void setName(String name) {
     this.name = name;
   }
