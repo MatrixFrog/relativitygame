@@ -11,8 +11,13 @@ public class VelocitySlider extends JSlider implements ChangeListener {
   private PhysicalObject obj;
 
   public VelocitySlider(PhysicalObject obj) {
-    super(0, 100, 0);
+    this(obj, 0);
+  }
+
+  public VelocitySlider(PhysicalObject obj, double initialValue) {
+    super(0, 100, (int) (initialValue*100));
     this.obj = obj;
+    obj.setVelocity(initialValue, 0);
     setMajorTickSpacing(5);
     setMinorTickSpacing(1);
     setSnapToTicks(true);

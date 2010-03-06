@@ -58,7 +58,7 @@ public class Relativity extends JFrame {
     }
   };
 
-  private Action loadLevelAction = new AbstractAction() {
+  private Action loadLevelAction = new AbstractAction("Load Level") {
     public void actionPerformed(ActionEvent arg0) {
       // TODO show a "load level" dialog and then load the level
     }
@@ -76,21 +76,25 @@ public class Relativity extends JFrame {
 
   public Relativity() {
     super("Relativity");
-    setLayout(new GridBagLayout());
-    GridBagConstraints gbc = new GridBagConstraints();
-    gbc.weightx = gbc.weighty = 1;
+
     setSize(1024, 768);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
 
     initMenu();
 
+    setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.weightx = 1;
+
     gbc.gridx = gbc.gridy = 0;
+    gbc.weighty = 4;
     gbc.fill = GridBagConstraints.BOTH;
     JPanel simulationPanel = createSimulationPanel();
     add(simulationPanel, gbc);
 
     gbc.gridy++;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
+    gbc.weighty = 1;
+    gbc.fill = GridBagConstraints.NONE;
     this.add(createControlPanel(), gbc);
 
     timer = new Timer(5, timestepAction);

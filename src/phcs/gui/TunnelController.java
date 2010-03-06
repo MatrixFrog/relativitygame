@@ -4,7 +4,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -18,19 +20,28 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import phcs.PhysicalObject;
 import phcs.objects.Tunnel;
 import util.swingutils.RecursiveEnablePanel;
 import util.swingutils.SwingUtils;
 
+/**
+ * A GUI panel that allows the user to control a Tunnel by stating at what times each
+ * gate should be toggled. All times are given in the tunnel's rest frame and if the
+ * tunnel is moving they are automatically converted to whatever frame the animation
+ * is being viewed in.
+ */
 public class TunnelController extends RecursiveEnablePanel implements ActionListener {
 
   private Tunnel tunnel;
   private DefaultListModel listModel = new DefaultListModel();
-  private Map<Double, GateEvent> events = new HashMap<Double, GateEvent>();
+  private List<GateEvent> events = new ArrayList<GateEvent>();
+  private Map<Double, GateEvent> eventMap;
+
   private ButtonGroup gateButtons = new ButtonGroup();
   private JRadioButton leftGateButton = new JRadioButton("left gate", true);
   private JRadioButton rightGateButton = new JRadioButton("right gate");
-  private JTextField timeField = new JTextField(20);
+  private JTextField timeField = new JTextField(10);
   private JButton addButton = new JButton("Add event");
 
   private double time = 0;
@@ -74,7 +85,7 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     addButton.addActionListener(this);
   }
 
-  private class GateEvent {
+  class GateEvent {
     /** true = left, false = right */
     private boolean gate;
     private double time;
@@ -101,12 +112,16 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
   }
 
   public void incrementTime(double addedTime) {
+    if (eventMap == null) {
+      buildEventMap();
+    }
     // Any events that happen between now and (now + addedTime) are triggered.
-    for (Entry<Double, GateEvent> e : events.entrySet()) {
+    for (Entry<Double, GateEvent> e : eventMap.entrySet()) {
+      // TODO figure out a way to do this so that we're not looping over the whole map every single timestep
       double eventTime = e.getKey();
-      GateEvent evt = e.getValue();
+      GateEvent event = e.getValue();
       if (eventTime >= time && eventTime < (time+addedTime)) {
-        evt.doEvent();
+        event.doEvent();
       }
     }
     time += addedTime;
@@ -114,21 +129,35 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
 
   public void reset() {
     time = 0;
+    eventMap = null;
     tunnel.reset();
   }
 
-  public void actionPerformed(ActionEvent ae) {
-    if (ae.getSource() == addButton) {
-      try {
-        double eventTime = Double.parseDouble(timeField.getText());
-        GateEvent gateEvent = new GateEvent(leftGateButton.isSelected(), eventTime);
-        listModel.addElement(gateEvent);
-        events.put(gateEvent.time, gateEvent);
-        timeField.setText("");
-      } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(SwingUtils.getActiveFrame(), "Invalid number: " + timeField.getText());
+  public void buildEventMap() {
+    eventMap = new HashMap<Double, GateEvent>();
+    for (GateEvent event : events) {
+      double time = event.time/PhysicalObject.gamma(tunnel.getSpeed());
+      if (!event.gate) {
+        time += tunnel.getSpeed()*tunnel.getWidth();
       }
+      eventMap.put(time,event);
     }
+  }
+
+  public void actionPerformed(ActionEvent ae) {
+    try {
+      double eventTime = Double.parseDouble(timeField.getText());
+      GateEvent gateEvent = new GateEvent(leftGateButton.isSelected(), eventTime);
+      addGateEvent(gateEvent);
+      timeField.setText("");
+    } catch (NumberFormatException e) {
+      JOptionPane.showMessageDialog(SwingUtils.getActiveFrame(), "Invalid number: " + timeField.getText());
+    }
+  }
+
+  void addGateEvent(GateEvent e) {
+    listModel.addElement(e);
+    events.add(e);
   }
 
 
