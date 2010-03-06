@@ -54,7 +54,8 @@ public abstract class PhysicalObject {
 
   /**
    * All the actions that should occur once per timestep belong in this method.
-   * If this is overridden in subclasses, they must call <tt>super.update();</tt>
+   * Subclasses typically should not override this method; they should override
+   * {link {@link #timeIncrement(double)} instead.
    */
   public void update() {
     x += vx;
@@ -140,10 +141,8 @@ public abstract class PhysicalObject {
   }
 
   /**
-   * While there are an infinite number of frames in which any object is at rest,
-   * this simply returns the one with the same origin as the primary frame.
-   *
-   * @return the reference frame in which this object is at rest.
+   * @return A reference frame in which this object is at rest (though not necessarily
+   * the one where it is at the origin).
    */
   public ReferenceFrame getRestFrame() {
     return restFrame;

@@ -4,6 +4,7 @@ import static phcs.PhysicalObject.inverseGamma;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -36,7 +37,9 @@ public class RelativityLevel {
   }
 
   /**
-   * This is what gets called when the player presses the "Go" button in the UI
+   * This is what gets called when the player presses the "Go" button in the UI. It calls
+   * rf.transformVelocity(obj) for all the objects in the level where rf is the reference
+   * frame being used.
    */
   public void go() {
     running = true;
@@ -54,6 +57,11 @@ public class RelativityLevel {
     }
   }
 
+  /**
+   * This is what gets called when the player presses the "Reset" button in the UI. It calls
+   * rf.untransformVelocity(obj) for all the objects in the level where rf is the reference
+   * frame being used.
+   */
   public void reset() {
     for (PhysicalObject obj : simulationObjects) {
       obj.reset();
@@ -87,6 +95,10 @@ public class RelativityLevel {
   public JPanel getControlPanel() {
     return controlPanel;
   }
+
+  public static List<RelativityLevel> levels = Arrays.asList(
+      createLightClocksOnTrainLevel(), createSpaceshipInTunnelLevel()
+  );
 
   public static RelativityLevel createLightClocksOnTrainLevel() {
     /*
