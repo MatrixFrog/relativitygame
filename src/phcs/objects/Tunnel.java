@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 
 import phcs.PhysicalObject;
+import phcs.gui.TunnelController;
 
 /**
  * A tunnel with gates on either end that can open or close. The player can decide
@@ -15,6 +16,7 @@ public class Tunnel extends PhysicalObject {
 
   private boolean leftGateOpen = true;
   private boolean rightGateOpen = true;
+  private TunnelController controller;
 
   public Tunnel() {
     this(300, 100, 100, 60, 0, 0);
@@ -22,6 +24,11 @@ public class Tunnel extends PhysicalObject {
 
   public Tunnel(double x, double y, double width, double height, double vx, double vy) {
     super(x, y, width, height, vx, vy);
+  }
+
+  public void setController(TunnelController controller) {
+    this.controller = controller;
+    controller.setTunnel(this);
   }
 
   @Override public void reset() {
@@ -36,6 +43,13 @@ public class Tunnel extends PhysicalObject {
     g.drawLine(getX(), (getY()+getHeight()), (getX() + getWidth()),(getY()+getHeight()));
     paintLeftGate(g);
     paintRightGate(g);
+  }
+
+  @Override
+  public void timeIncrement(double time) {
+    if (controller != null) {
+      controller.timeIncrement(time);
+    }
   }
 
   private void paintLeftGate(Graphics g) {

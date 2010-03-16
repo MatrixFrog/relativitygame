@@ -48,8 +48,8 @@ public class TunnelControllerTest extends JFrame implements ActionListener {
     enableButton.addActionListener(this);
 
     // Both of these events should occur at the same time if the tunnel has v=0.5
-    tunnelController.addGateEvent(tunnelController.new GateEvent(true, 173.21));
-    tunnelController.addGateEvent(tunnelController.new GateEvent(false, 115.47));
+    tunnelController.addEvent(tunnelController.new GateEvent(true, 173.21));
+    tunnelController.addEvent(tunnelController.new GateEvent(false, 115.47));
 
     setSize(800, 600);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -105,7 +105,7 @@ public class TunnelControllerTest extends JFrame implements ActionListener {
 
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == timer) {
-      tunnelController.incrementTime(1);
+      tunnelController.timeIncrement(1);
       tunnel.update();
       time++;
       timeLabel.setText(Integer.toString(time));

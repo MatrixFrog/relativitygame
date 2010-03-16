@@ -4,9 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -34,36 +32,62 @@ import util.swingutils.SwingUtils;
 public class TunnelController extends RecursiveEnablePanel implements ActionListener {
 
   private Tunnel tunnel;
-  private DefaultListModel listModel = new DefaultListModel();
-  private List<GateEvent> events = new ArrayList<GateEvent>();
+  //private List<GateEvent> events = new ArrayList<GateEvent>();
   private Map<Double, GateEvent> eventMap;
 
+  private DefaultListModel listModel = new DefaultListModel();
+  private JList guiEventList = new JList(listModel);
   private ButtonGroup gateButtons = new ButtonGroup();
   private JRadioButton leftGateButton = new JRadioButton("left gate", true);
   private JRadioButton rightGateButton = new JRadioButton("right gate");
-  private JTextField timeField = new JTextField(10);
+  private JTextField timeField = new JTextField(6);
   private JButton addButton = new JButton("Add event");
+  private JButton removeButton = new JButton("Remove event");
 
   private double time = 0;
 
-  public TunnelController(Tunnel tunnel) {
-    this.tunnel = tunnel;
+  public TunnelController() {
     gateButtons.add(leftGateButton);
     gateButtons.add(rightGateButton);
 
+    addButton.addActionListener(this);
+    removeButton.addActionListener(this);
+
+    layoutGUI();
+  }
+
+  public TunnelController(Tunnel tunnel) {
+    this();
+    setTunnel(tunnel);
+  }
+
+  public void setTunnel(Tunnel tunnel) {
+    this.tunnel = tunnel;
+
+    this.setBorder(BorderFactory.createTitledBorder(tunnel.getName()));
+  }
+
+  /**
+   * @param tunnel
+   */
+  private void layoutGUI() {
     this.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.gridx = gbc.gridy = 0;
     gbc.weightx = gbc.weighty = 0;
 
-    gbc.gridheight = 2;
-    this.add(new JList(listModel), gbc);
-    gbc.gridx++;
+    this.add(guiEventList, gbc);
+    gbc.gridy++;
 
+    this.add(removeButton, gbc);
+    gbc.gridx++;
+    gbc.gridy = 0;
+
+    gbc.gridheight = 2;
     this.add(new JLabel("Toggle"), gbc);
     gbc.gridx++;
-
     gbc.gridheight = 1;
+
     gbc.gridy = 1;
     this.add(rightGateButton, gbc);
     gbc.gridy = 0;
@@ -79,10 +103,6 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
 
     this.add(addButton, gbc);
     gbc.gridx++;
-
-    this.setBorder(BorderFactory.createTitledBorder(tunnel.getName()));
-
-    addButton.addActionListener(this);
   }
 
   class GateEvent {
@@ -111,7 +131,7 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     }
   }
 
-  public void incrementTime(double addedTime) {
+  public void timeIncrement(double addedTime) {
     if (eventMap == null) {
       buildEventMap();
     }
@@ -135,29 +155,46 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
 
   public void buildEventMap() {
     eventMap = new HashMap<Double, GateEvent>();
-    for (GateEvent event : events) {
-      double time = event.time/PhysicalObject.gamma(tunnel.getSpeed());
+    for (Object eventObj : listModel.toArray()) {
+      GateEvent event = (GateEvent) eventObj;
+      double eventTime = event.time/PhysicalObject.gamma(tunnel.getSpeed());
       if (!event.gate) {
-        time += tunnel.getSpeed()*tunnel.getWidth();
+        eventTime += tunnel.getSpeed()*tunnel.getWidth();
       }
-      eventMap.put(time,event);
+      eventMap.put(eventTime,event);
     }
   }
 
-  public void actionPerformed(ActionEvent ae) {
+  void addEvent(GateEvent e) {
+    listModel.addElement(e);
+  }
+
+  private void addEventFromGUI() {
     try {
       double eventTime = Double.parseDouble(timeField.getText());
       GateEvent gateEvent = new GateEvent(leftGateButton.isSelected(), eventTime);
-      addGateEvent(gateEvent);
+      addEvent(gateEvent);
       timeField.setText("");
     } catch (NumberFormatException e) {
       JOptionPane.showMessageDialog(SwingUtils.getActiveFrame(), "Invalid number: " + timeField.getText());
     }
   }
 
-  void addGateEvent(GateEvent e) {
-    listModel.addElement(e);
-    events.add(e);
+  private void removeSelectedEvents() {
+    int i=guiEventList.getSelectedIndex();
+    while (i != -1) {
+      listModel.remove(i);
+      i=guiEventList.getSelectedIndex();
+    }
+  }
+
+  public void actionPerformed(ActionEvent e) {
+    if (e.getSource() == addButton) {
+      addEventFromGUI();
+    }
+    else if (e.getSource() == removeButton) {
+      removeSelectedEvents();
+    }
   }
 
 
