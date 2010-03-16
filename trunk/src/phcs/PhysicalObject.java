@@ -133,14 +133,6 @@ public abstract class PhysicalObject {
   }
 
   /**
-   * Set the name of this object, which is used in several places in the GUI. If you don't
-   * call this method, the name will default to the name of the class.
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
    * @return A reference frame in which this object is at rest (though not necessarily
    * the one where it is at the origin).
    */
@@ -150,6 +142,14 @@ public abstract class PhysicalObject {
 
   public String getName() {
     return name;
+  }
+
+  /**
+   * Set the name of this object, which is used in several places in the GUI. If you don't
+   * call this method, the name will default to the name of the class.
+   */
+  public void setName(String name) {
+    this.name = name;
   }
 
   public int getWidth() {

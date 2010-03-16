@@ -17,12 +17,24 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-
 public class Relativity extends JFrame {
 
-  private RelativityLevel level = RelativityLevel.createSpaceshipInTunnelLevel();
+  //private RelativityLevel level = RelativityLevel.createSpaceshipInTunnelLevel();
+  private RelativityLevel level;
 
   private Timer timer;
+
+  private JPanel controlPanelContainer = new JPanel();
+  private JPanel simulationPanel  = new JPanel() {
+    @Override
+    public void paint(Graphics g) {
+      if (level != null) {
+        level.paint(g);
+      }
+    }
+  };
+
+  private JMenu referenceFrameMenu;
 
   // TODO disable all instances of this type of action while simulation is running
   private class SetReferenceFrameAction extends AbstractAction {
@@ -36,6 +48,19 @@ public class Relativity extends JFrame {
 
     public void actionPerformed(ActionEvent e) {
       level.setFrame(obj.getRestFrame());
+    }
+  }
+
+  private class LoadLevelAction extends AbstractAction {
+    private RelativityLevel level;
+
+    public LoadLevelAction(RelativityLevel level) {
+      super(level.getName());
+      this.level = level;
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+      loadLevel(level);
     }
   }
 
@@ -58,22 +83,6 @@ public class Relativity extends JFrame {
     }
   };
 
-  private Action loadLevelAction = new AbstractAction("Load Level") {
-    public void actionPerformed(ActionEvent arg0) {
-      // TODO show a "load level" dialog and then load the level
-    }
-  };
-
-  private JPanel createSimulationPanel() {
-    JPanel simulationPanel = new JPanel() {
-      @Override
-      public void paint(Graphics g) {
-        level.paint(g);
-      }
-    };
-    return simulationPanel;
-  }
-
   public Relativity() {
     super("Relativity");
 
@@ -89,16 +98,15 @@ public class Relativity extends JFrame {
     gbc.gridx = gbc.gridy = 0;
     gbc.weighty = 4;
     gbc.fill = GridBagConstraints.BOTH;
-    JPanel simulationPanel = createSimulationPanel();
     add(simulationPanel, gbc);
 
     gbc.gridy++;
     gbc.weighty = 1;
     gbc.fill = GridBagConstraints.NONE;
-    this.add(createControlPanel(), gbc);
+    this.add(controlPanelContainer, gbc);
 
     timer = new Timer(5, timestepAction);
-    reset();
+
     setVisible(true);
   }
 
@@ -107,21 +115,42 @@ public class Relativity extends JFrame {
 
     JMenu fileMenu = new JMenu("File");
     menuBar.add(fileMenu);
-    fileMenu.add(loadLevelAction);
+
+    for (RelativityLevel aLevel : RelativityLevel.levels) {
+      fileMenu.add(new LoadLevelAction(aLevel));
+    }
 
     JMenu simulationMenu = new JMenu("Simulation");
     menuBar.add(simulationMenu);
     simulationMenu.add(goAction);
     simulationMenu.add(resetAction);
 
-    JMenu referenceFrameMenu = new JMenu("Reference Frame");
+    referenceFrameMenu = new JMenu("Reference Frame");
     simulationMenu.add(referenceFrameMenu);
-    for (PhysicalObject obj : level.getSimulationObjects()) {
-      Action setReferenceFrameAction = new SetReferenceFrameAction(obj);
-      referenceFrameMenu.add(setReferenceFrameAction);
+
+    if (true) {
+      JMenu testMenu = new JMenu("Test");
+      menuBar.add(testMenu);
+      testMenu.add(new AbstractAction("Repaint") {
+        public void actionPerformed(ActionEvent arg0) {
+          repaint();
+        }
+      });
+      testMenu.add(new AbstractAction("Validate") {
+        public void actionPerformed(ActionEvent arg0) {
+          validate();
+        }
+      });
     }
 
     setJMenuBar(menuBar);
+  }
+
+  private void initReferenceFrameMenu() {
+    referenceFrameMenu.removeAll();
+    for (PhysicalObject obj : level.getSimulationObjects()) {
+      referenceFrameMenu.add(new SetReferenceFrameAction(obj));
+    }
   }
 
   private JPanel createControlPanel() {
@@ -149,8 +178,15 @@ public class Relativity extends JFrame {
   }
 
   private void loadLevel(RelativityLevel newLevel) {
-    // TODO re-create control panel and menu
     level = newLevel;
+
+    controlPanelContainer.removeAll();
+    controlPanelContainer.add(createControlPanel());
+
+    initReferenceFrameMenu();
+
+    reset();
+    validate();
   }
 
   private void go() {

@@ -5,6 +5,7 @@ import static phcs.PhysicalObject.inverseGamma;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -27,13 +28,14 @@ public class RelativityLevel {
   private ReferenceFrame referenceFrame = ReferenceFrame.DEFAULT_FRAME;
   private boolean running;
   private JPanel controlPanel;
+  private String name;
 
   public void addSimulationObject(PhysicalObject obj) {
     simulationObjects.add(obj);
   }
 
   public List<PhysicalObject> getSimulationObjects() {
-    return simulationObjects;
+    return Collections.unmodifiableList(simulationObjects);
   }
 
   /**
@@ -87,6 +89,7 @@ public class RelativityLevel {
   }
 
   public void paint(Graphics g) {
+    System.out.println(this+".paint()");
     for (PhysicalObject obj : simulationObjects) {
       obj.paint(g);
     }
@@ -94,6 +97,19 @@ public class RelativityLevel {
 
   public JPanel getControlPanel() {
     return controlPanel;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public String toString() {
+    return name;
   }
 
   public static List<RelativityLevel> levels = Arrays.asList(
@@ -122,6 +138,8 @@ public class RelativityLevel {
     level.controlPanel.add(new VelocitySlider(movingLightClock));
     level.controlPanel.setBorder(BorderFactory.createTitledBorder(movingLightClock.getName()));
 
+    level.setName("Level 1");
+
     return level;
   }
 
@@ -135,8 +153,11 @@ public class RelativityLevel {
     level.addSimulationObject(spaceship);
 
     level.controlPanel = new RecursiveEnablePanel();
-    TunnelController tunnelController = new TunnelController(tunnel);
-    level.controlPanel.add(tunnelController);
+    TunnelController controller = new TunnelController();
+    tunnel.setController(controller);
+    level.controlPanel.add(controller);
+
+    level.setName("Level 2");
 
     return level;
   }
