@@ -19,7 +19,8 @@ import javax.swing.Timer;
 
 public class Relativity extends JFrame {
 
-  //private RelativityLevel level = RelativityLevel.createSpaceshipInTunnelLevel();
+  private static final boolean DEBUG = true;
+
   private RelativityLevel level;
 
   private Timer timer;
@@ -60,7 +61,7 @@ public class Relativity extends JFrame {
     }
 
     public void actionPerformed(ActionEvent ae) {
-      loadLevel(level);
+      Relativity.this.loadLevel(this.level);
     }
   }
 
@@ -128,8 +129,8 @@ public class Relativity extends JFrame {
     referenceFrameMenu = new JMenu("Reference Frame");
     simulationMenu.add(referenceFrameMenu);
 
-    if (true) {
-      JMenu testMenu = new JMenu("Test");
+    if (DEBUG) {
+      JMenu testMenu = new JMenu("Debug");
       menuBar.add(testMenu);
       testMenu.add(new AbstractAction("Repaint") {
         public void actionPerformed(ActionEvent arg0) {
@@ -148,7 +149,7 @@ public class Relativity extends JFrame {
 
   private void initReferenceFrameMenu() {
     referenceFrameMenu.removeAll();
-    for (PhysicalObject obj : level.getSimulationObjects()) {
+    for (PhysicalObject obj : this.level.getSimulationObjects()) {
       referenceFrameMenu.add(new SetReferenceFrameAction(obj));
     }
   }
@@ -187,6 +188,7 @@ public class Relativity extends JFrame {
 
     reset();
     validate();
+    log("Finished loading " + newLevel);
   }
 
   private void go() {
@@ -204,6 +206,12 @@ public class Relativity extends JFrame {
     resetAction.setEnabled(false);
     level.getControlPanel().setEnabled(true);
     repaint();
+  }
+
+  public static void log(String msg) {
+    if (DEBUG) {
+      System.out.println(msg);
+    }
   }
 
   public static void main(String[] args) {
