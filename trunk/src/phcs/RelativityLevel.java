@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import phcs.levels.LightClocksOnTrainLevel;
 import phcs.levels.SpaceshipInTunnelLevel;
 
 /**
@@ -20,6 +21,7 @@ public abstract class RelativityLevel {
   private boolean running;
   protected JPanel controlPanel;
   private String name;
+  private List<GoalListener> goalListeners = new ArrayList<GoalListener>();
 
   public void addSimulationObject(PhysicalObject obj) {
     simulationObjects.add(obj);
@@ -48,7 +50,40 @@ public abstract class RelativityLevel {
     for (PhysicalObject obj : this.simulationObjects) {
       obj.update();
     }
+    if (goalAchieved()) {
+      notifyGoalListeners();
+    }
   }
+
+
+  /**
+   * Add the specified goalListener (if it was added)
+   */
+  public void addGoalListener(GoalListener listener) {
+    goalListeners.add(listener);
+  }
+
+  /**
+   * Remove the specified goalListener (if it was added)
+   */
+  public void removeGoalListener(GoalListener listener) {
+    goalListeners.remove(listener);
+  }
+
+  /**
+   * Notify all installed GoalListeners. (Observer pattern)
+   */
+  private void notifyGoalListeners() {
+    for (GoalListener listener : goalListeners) {
+      listener.goalAchieved();
+    }
+  }
+
+  /**
+   * @return true if the goal condition has been met, meaning the player has achieved
+   * the goal in this level
+   */
+  protected abstract boolean goalAchieved();
 
   /**
    * This is what gets called when the player presses the "Reset" button in the UI. It calls
@@ -103,7 +138,7 @@ public abstract class RelativityLevel {
   }
 
   public static List<RelativityLevel> levels = Arrays.asList(
-      //(RelativityLevel) new LightClocksOnTrainLevel(),
-      (RelativityLevel) new SpaceshipInTunnelLevel()
+      new LightClocksOnTrainLevel(),
+      new SpaceshipInTunnelLevel()
   );
 }

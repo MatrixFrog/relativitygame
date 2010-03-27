@@ -3,6 +3,7 @@ package phcs;
 import static util.swingutils.SwingUtils.useDefaultLookAndFeel;
 import static util.swingutils.SwingUtils.useDialogExceptionHandler;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,6 +11,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -26,10 +29,17 @@ public class Relativity extends JFrame {
   private Timer timer;
 
   private JPanel controlPanelContainer = new JPanel();
-  private JPanel simulationPanel  = new JPanel() {
+  private JPanel simulationPanel  = new JPanel(true) {
+    {
+      setBorder(BorderFactory.createLineBorder(Color.BLACK, 10));
+    }
     @Override
     public void paint(Graphics g) {
       if (level != null) {
+        if (DEBUG) {
+          g.setColor(Color.PINK);
+          g.fillRect(0, 0, getWidth(), getHeight());
+        }
         level.paint(g);
       }
     }
@@ -90,25 +100,30 @@ public class Relativity extends JFrame {
     setSize(1024, 768);
     setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+    controlPanelContainer.setLayout(new BoxLayout(controlPanelContainer, BoxLayout.X_AXIS));
+
     initMenu();
-
-    setLayout(new GridBagLayout());
-    GridBagConstraints gbc = new GridBagConstraints();
-    gbc.weightx = 1;
-
-    gbc.gridx = gbc.gridy = 0;
-    gbc.weighty = 4;
-    gbc.fill = GridBagConstraints.BOTH;
-    add(simulationPanel, gbc);
-
-    gbc.gridy++;
-    gbc.weighty = 1;
-    gbc.fill = GridBagConstraints.NONE;
-    this.add(controlPanelContainer, gbc);
+    layoutGUIcomponents();
 
     timer = new Timer(5, timestepAction);
 
     setVisible(true);
+  }
+
+  private void layoutGUIcomponents() {
+    setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.weightx = gbc.weighty = 5;
+    gbc.gridx = gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.BOTH;
+
+    add(simulationPanel, gbc);
+
+    gbc.fill = GridBagConstraints.NONE;
+    gbc.gridy++;
+    gbc.weighty = 1;
+
+    this.add(controlPanelContainer, gbc);
   }
 
   private void initMenu() {
@@ -172,7 +187,7 @@ public class Relativity extends JFrame {
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.gridwidth = 2;
-    gbc.fill = GridBagConstraints.NONE;
+    gbc.fill = GridBagConstraints.BOTH;
     controlPanel.add(level.getControlPanel(), gbc);
 
     return controlPanel;
@@ -182,7 +197,9 @@ public class Relativity extends JFrame {
     level = newLevel;
 
     controlPanelContainer.removeAll();
-    controlPanelContainer.add(createControlPanel());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    controlPanelContainer.add(createControlPanel(), gbc);
 
     initReferenceFrameMenu();
 

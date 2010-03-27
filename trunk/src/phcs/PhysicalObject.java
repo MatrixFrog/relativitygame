@@ -105,8 +105,6 @@ public abstract class PhysicalObject {
     return String.format("%s %s at (%.2f,%.2f)", getClass().getSimpleName(), name, x, y);
   }
 
-  // TODO make a similar system for allowing/disallowing the setting of the object's initial position
-
   /**
    * Set the velocity without checking the velocityEditable flag. For internal
    * use only.
