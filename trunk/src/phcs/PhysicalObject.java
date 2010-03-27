@@ -7,7 +7,6 @@ import static util.MathUtils.sq;
 import java.awt.Graphics;
 import java.awt.Point;
 
-
 /**
  * An instance of this class is a physical object such as a light-clock or a
  * spaceship.

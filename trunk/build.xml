@@ -34,7 +34,6 @@
 
 	<target name="clean">
 		<delete dir="${build}"/>
-		<delete dir="${doc}/javadoc"/>
 	</target>
 
 	<target name="createJar" depends="compile">
@@ -46,7 +45,7 @@
 		</jar>
 	</target>
 
-	<target name="createJar1.5" depends="compile">
+	<target name="createJar1.5" depends="compile1.5">
 		<jar destfile="relativity.jar">
 			<manifest>
 				<attribute name="Main-Class" value="phcs.Relativity" />
