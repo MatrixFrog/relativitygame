@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -45,9 +47,9 @@ public class Relativity extends JFrame {
     }
   };
 
+  private List<SetReferenceFrameAction> referenceFrameActions = new ArrayList<SetReferenceFrameAction>();
   private JMenu referenceFrameMenu;
 
-  // TODO disable all instances of this type of action while simulation is running
   private class SetReferenceFrameAction extends AbstractAction {
 
     private PhysicalObject obj;
@@ -163,9 +165,12 @@ public class Relativity extends JFrame {
   }
 
   private void initReferenceFrameMenu() {
+    referenceFrameActions.clear();
     referenceFrameMenu.removeAll();
     for (PhysicalObject obj : this.level.getSimulationObjects()) {
-      referenceFrameMenu.add(new SetReferenceFrameAction(obj));
+      SetReferenceFrameAction frameAction = new SetReferenceFrameAction(obj);
+      referenceFrameMenu.add(frameAction);
+      referenceFrameActions.add(frameAction);
     }
   }
 
@@ -210,17 +215,25 @@ public class Relativity extends JFrame {
 
   private void go() {
     level.getControlPanel().setEnabled(false);
-    goAction.setEnabled(false);
     resetAction.setEnabled(true);
-    timer.start();
+    goAction.setEnabled(false);
+    for (SetReferenceFrameAction frameAction : referenceFrameActions) {
+      frameAction.setEnabled(false);
+    }
+    referenceFrameMenu.setEnabled(false);
     level.go();
+    timer.start();
   }
 
   private void reset() {
-    level.reset();
     timer.stop();
-    goAction.setEnabled(true);
+    level.reset();
     resetAction.setEnabled(false);
+    goAction.setEnabled(true);
+    for (SetReferenceFrameAction frameAction : referenceFrameActions) {
+      frameAction.setEnabled(true);
+    }
+    referenceFrameMenu.setEnabled(true);
     level.getControlPanel().setEnabled(true);
     repaint();
   }
