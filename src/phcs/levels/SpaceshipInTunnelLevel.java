@@ -22,4 +22,10 @@ public class SpaceshipInTunnelLevel extends RelativityLevel {
     tunnel.setController(controller);
     this.controlPanel.add(controller);
   }
+
+  @Override
+  protected boolean goalAchieved() {
+    // TODO SpaceshipInTunnelLevel.goalAchieved()
+    return false;
+  }
 }

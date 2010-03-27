@@ -1,5 +1,8 @@
 package phcs.levels;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
 import javax.swing.BorderFactory;
 
 import phcs.RelativityLevel;
@@ -28,7 +31,16 @@ public class LightClocksOnTrainLevel extends RelativityLevel {
     this.addSimulationObject(movingLightClock);
 
     this.controlPanel = new RecursiveEnablePanel();
-    this.controlPanel.add(new VelocitySlider(movingLightClock));
+    this.controlPanel.setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    this.controlPanel.add(new VelocitySlider(movingLightClock), gbc);
     this.controlPanel.setBorder(BorderFactory.createTitledBorder(movingLightClock.getName()));
+  }
+
+  @Override
+  protected boolean goalAchieved() {
+    // TODO LightClocksOnTrainLevel.goalAchieved()
+    return false;
   }
 }
