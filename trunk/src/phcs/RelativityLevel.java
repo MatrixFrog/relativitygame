@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import phcs.levels.LightClocksOnTrainLevel;
 import phcs.levels.SpaceshipInTunnelLevel;
 
 /**
@@ -40,13 +39,13 @@ public abstract class RelativityLevel {
     for (PhysicalObject obj : simulationObjects) {
       referenceFrame.transformVelocity(obj);
     }
-    for (PhysicalObject obj : simulationObjects) {
+    for (PhysicalObject obj : this.simulationObjects) {
       obj.go();
     }
   }
 
   public void update() {
-    for (PhysicalObject obj : simulationObjects) {
+    for (PhysicalObject obj : this.simulationObjects) {
       obj.update();
     }
   }
@@ -81,7 +80,6 @@ public abstract class RelativityLevel {
   }
 
   public void paint(Graphics g) {
-    System.out.println(this+".paint()");
     for (PhysicalObject obj : simulationObjects) {
       obj.paint(g);
     }
@@ -105,7 +103,7 @@ public abstract class RelativityLevel {
   }
 
   public static List<RelativityLevel> levels = Arrays.asList(
-      (RelativityLevel) new LightClocksOnTrainLevel(),
+      //(RelativityLevel) new LightClocksOnTrainLevel(),
       (RelativityLevel) new SpaceshipInTunnelLevel()
   );
 }

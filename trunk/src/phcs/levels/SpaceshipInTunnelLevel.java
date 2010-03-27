@@ -1,12 +1,13 @@
 package phcs.levels;
 
 import static phcs.PhysicalObject.inverseGamma;
+import phcs.RelativityLevel;
 import phcs.gui.TunnelController;
 import phcs.objects.Spaceship;
 import phcs.objects.Tunnel;
 import util.swingutils.RecursiveEnablePanel;
 
-public class SpaceshipInTunnelLevel extends LightClocksOnTrainLevel {
+public class SpaceshipInTunnelLevel extends RelativityLevel {
   public SpaceshipInTunnelLevel() {
     setName("Level 2: Spaceship in a Tunnel");
 
