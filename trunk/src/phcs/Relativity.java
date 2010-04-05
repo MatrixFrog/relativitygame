@@ -19,12 +19,13 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Relativity extends JFrame {
+public class Relativity extends JFrame implements GoalListener {
 
-  private static final boolean DEBUG = true;
+  public static final boolean DEBUG = true;
 
   private RelativityLevel level;
 
@@ -210,6 +211,9 @@ public class Relativity extends JFrame {
 
     reset();
     validate();
+
+    level.showInstructions();
+    level.addGoalListener(this);
     log("Finished loading " + newLevel);
   }
 
@@ -248,5 +252,10 @@ public class Relativity extends JFrame {
     useDefaultLookAndFeel();
     useDialogExceptionHandler();
     new Relativity();
+  }
+
+  public void goalAchieved() {
+    JOptionPane.showMessageDialog(this, "You win!");
+    reset();
   }
 }

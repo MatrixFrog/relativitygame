@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,11 +16,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import phcs.Flash;
+import phcs.LightClockListener;
 import phcs.PhysicalObject;
 
 public class LightClock extends PhysicalObject implements ChangeListener {
 
   private List<Flash> flashes;
+  private int counter;
+  private List<LightClockListener> listeners = new ArrayList<LightClockListener>();
 
   public LightClock() {
     this(0, 0);
@@ -82,6 +86,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
   @Override
   public void update() {
     super.update();
+    counter++;
     for (Flash flash : flashes) {
       if (flash.getY() >= this.getBottomY()) {
         flash.reflectVertical();
@@ -92,6 +97,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
       Flash firstFlash = flashes.get(0);
       if (firstFlash.getY() <= this.getTopY()) {
         flashes.remove(firstFlash);
+        notifyLightClockListeners();
       }
     }
   }
@@ -99,6 +105,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
   @Override
   public void reset() {
     super.reset();
+    counter = 0;
     flashes = new LinkedList<Flash>();
   }
 
@@ -108,7 +115,22 @@ public class LightClock extends PhysicalObject implements ChangeListener {
     flash();
   }
 
+  // TODO don't do this in this way!
   public void stateChanged(ChangeEvent e) {
     setVelocity(((double) ((JSlider) e.getSource()).getValue()) / 100, 0);
+  }
+
+  public void addLightClockListener(LightClockListener lightClockListener) {
+    listeners.add(lightClockListener);
+  }
+
+  public void removeLightClockListener(LightClockListener lightClockListener) {
+    listeners.remove(lightClockListener);
+  }
+
+  private void notifyLightClockListeners() {
+    for (LightClockListener listener : listeners) {
+      listener.cycleCompleted(counter);
+    }
   }
 }

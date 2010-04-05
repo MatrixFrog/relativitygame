@@ -6,10 +6,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import phcs.levels.LightClocksOnTrainLevel;
 import phcs.levels.SpaceshipInTunnelLevel;
+import util.swingutils.SwingUtils;
 
 /**
  * An instance of this class represents one single "level" or "puzzle" to be solved.
@@ -21,6 +23,7 @@ public abstract class RelativityLevel {
   private boolean running;
   protected JPanel controlPanel;
   private String name;
+  protected String instructions;
   private List<GoalListener> goalListeners = new ArrayList<GoalListener>();
 
   public void addSimulationObject(PhysicalObject obj) {
@@ -141,4 +144,14 @@ public abstract class RelativityLevel {
       new LightClocksOnTrainLevel(),
       new SpaceshipInTunnelLevel()
   );
+
+  public void showInstructions() {
+    if (Relativity.DEBUG) {
+      System.out.println("Showing instructions.");
+    }
+    if (instructions != null) {
+      JOptionPane.showMessageDialog(SwingUtils.getActiveFrame(), instructions,
+          this.getName(), JOptionPane.PLAIN_MESSAGE);
+    }
+  }
 }
