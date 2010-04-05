@@ -22,7 +22,6 @@ public class LightClocksOnTrainLevel extends RelativityLevel implements LightClo
   private boolean goalAchieved = false;
 
   public LightClocksOnTrainLevel() {
-    super();
     setName("Level 1: A light clock on a train.");
 
     instructions = "Instructions: The light clock on the left is stationary, \n" +
