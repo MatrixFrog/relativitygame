@@ -21,7 +21,8 @@
 	vice versa, you should do a 'clean' in between. Otherwise ant won't know the old
 	class files are the wrong version. -->
 	<target name="compile1.5" depends="init" description="compile the source ">
-		<javac compiler="javac1.5" srcdir="${src}" classpathref="project.path" destdir="${build}" debug="true">
+		<javac srcdir="${src}" classpathref="project.path" 
+			destdir="${build}" debug="true" source="1.5">
 			<compilerarg value="-Xlint:unchecked"/>
 		</javac>
 	</target>
@@ -46,7 +47,7 @@
 	</target>
 
 	<target name="createJar1.5" depends="compile1.5">
-		<jar destfile="relativity.jar">
+		<jar destfile="relativity_java1.5.jar">
 			<manifest>
 				<attribute name="Main-Class" value="phcs.Relativity" />
 			</manifest>
