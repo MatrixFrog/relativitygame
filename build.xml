@@ -2,6 +2,7 @@
 
 	<property name="src" location="src"/>
 	<property name="build" location="build"/>
+	<property name="test_src" location="test/src"/>
 
 	<property environment="env"/>
 	<!--  Classpaths -->
@@ -33,11 +34,11 @@
 		</javac>
 	</target>
 
-	<target name="clean">
+	<target name="clean" description="Remove the 'build' Directory">
 		<delete dir="${build}"/>
 	</target>
 
-	<target name="createJar" depends="compile">
+	<target name="createJar" depends="compile" description="Create an executable jar file">
 		<jar destfile="relativity.jar">
 			<manifest>
 				<attribute name="Main-Class" value="phcs.Relativity" />
@@ -46,7 +47,8 @@
 		</jar>
 	</target>
 
-	<target name="createJar1.5" depends="compile1.5">
+	<target name="createJar1.5" depends="compile1.5" description="Create an executable jar file 
+		for a system running Java 1.5">
 		<jar destfile="relativity_java1.5.jar">
 			<manifest>
 				<attribute name="Main-Class" value="phcs.Relativity" />
@@ -55,7 +57,15 @@
 		</jar>
 	</target>
 
-	<target name="run" depends="compile">
+	<target name="test" depends="compile" description="Run all JUnit tests">
+		<junit dir="${test_src}">
+			<classpath>
+				<path></path>
+			</classpath>
+		</junit>
+	</target>
+	
+	<target name="run" depends="compile" description="Play the game">
 		<java classname="phcs.Relativity" classpathref="project.path" fork="true"/>
 	</target>
 </project>
