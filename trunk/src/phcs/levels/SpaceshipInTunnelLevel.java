@@ -7,14 +7,26 @@ import phcs.objects.Spaceship;
 import phcs.objects.Tunnel;
 import util.swingutils.RecursiveEnablePanel;
 
+/**
+ * This level enacts the famous thought experiment known as the "Ladder Paradox"
+ *
+ * @see http://en.wikipedia.org/wiki/Ladder_paradox
+ */
 public class SpaceshipInTunnelLevel extends RelativityLevel {
+
+  private Tunnel tunnel = new Tunnel(500, 285, 50, 30, 0, 0);
+  private Spaceship spaceship = new Spaceship(30, 290, 100, 20, inverseGamma(2), 0);
+
   public SpaceshipInTunnelLevel() {
     setName("Level 2: Spaceship in a Tunnel");
 
-    Tunnel tunnel = new Tunnel(500, 285, 50, 30, 0, 0);
-    this.addSimulationObject(tunnel);
+    instructions = "A spaceship of rest length 100 travels through a tunnel of \n" +
+    		"rest length 50. The spaceship travels at a speed of v/c = 1/sqrt(2) \n" +
+    		"which means that it contracts to a length of 50, when viewed in the rest frame of " +
+    		"the tunnel. "; // TODO add more details
 
-    Spaceship spaceship = new Spaceship(30, 290, 100, 20, inverseGamma(2), 0);
+    tunnel.setDefaultGateStates(true, false);
+    this.addSimulationObject(tunnel);
     this.addSimulationObject(spaceship);
 
     this.controlPanel = new RecursiveEnablePanel();
@@ -25,7 +37,6 @@ public class SpaceshipInTunnelLevel extends RelativityLevel {
 
   @Override
   protected boolean goalAchieved() {
-    // TODO SpaceshipInTunnelLevel.goalAchieved()
-    return false;
+    return spaceship.getX() == tunnel.getX() && !tunnel.isLeftGateOpen() && !tunnel.isRightGateOpen();
   }
 }

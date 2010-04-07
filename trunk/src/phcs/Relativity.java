@@ -242,6 +242,11 @@ public class Relativity extends JFrame implements GoalListener {
     repaint();
   }
 
+  public void goalAchieved() {
+    JOptionPane.showMessageDialog(this, "You win!");
+    reset();
+  }
+
   public static void log(String msg) {
     if (DEBUG) {
       System.out.println(msg);
@@ -252,10 +257,5 @@ public class Relativity extends JFrame implements GoalListener {
     useDefaultLookAndFeel();
     useDialogExceptionHandler();
     new Relativity();
-  }
-
-  public void goalAchieved() {
-    JOptionPane.showMessageDialog(this, "You win!");
-    reset();
   }
 }

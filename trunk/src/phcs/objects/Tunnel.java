@@ -17,6 +17,8 @@ public class Tunnel extends PhysicalObject {
   private boolean leftGateOpen = true;
   private boolean rightGateOpen = true;
   private TunnelController controller;
+  private boolean leftGateOpenByDefault;
+  private boolean rightGateOpenByDefault;
 
   public Tunnel() {
     this(300, 100, 100, 60, 0, 0);
@@ -24,6 +26,20 @@ public class Tunnel extends PhysicalObject {
 
   public Tunnel(double x, double y, double width, double height, double vx, double vy) {
     super(x, y, width, height, vx, vy);
+    setDefaultGateStates(true, true);
+  }
+
+  /**
+   * If you don't call this method at all, then it is
+   * called automatically with the arguments (true, true)
+   *
+   * @param leftGateOpenByDefault sets whether the left gate is open by default (starts open)
+   * @param rightGateOpenByDefault sets whether the right gate is open by default (starts open)
+   *
+   */
+  public void setDefaultGateStates(boolean leftGateOpenByDefault, boolean rightGateOpenByDefault) {
+    this.leftGateOpenByDefault = leftGateOpenByDefault;
+    this.rightGateOpenByDefault = rightGateOpenByDefault;
   }
 
   public void setController(TunnelController controller) {
@@ -31,9 +47,14 @@ public class Tunnel extends PhysicalObject {
     controller.setTunnel(this);
   }
 
-  @Override public void reset() {
+  @Override
+  public void reset() {
     super.reset();
-    leftGateOpen = rightGateOpen = true;
+    if (controller != null) {
+      controller.reset();
+    }
+    leftGateOpen = leftGateOpenByDefault;
+    rightGateOpen = rightGateOpenByDefault; // TODO allow for different defaults
   }
 
   @Override
@@ -87,4 +108,11 @@ public class Tunnel extends PhysicalObject {
     rightGateOpen = !rightGateOpen;
   }
 
+  public boolean isLeftGateOpen() {
+    return leftGateOpen;
+  }
+
+  public boolean isRightGateOpen() {
+    return rightGateOpen;
+  }
 }

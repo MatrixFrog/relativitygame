@@ -19,6 +19,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import phcs.PhysicalObject;
+import phcs.Relativity;
 import phcs.objects.Tunnel;
 import util.swingutils.RecursiveEnablePanel;
 import util.swingutils.SwingUtils;
@@ -32,7 +33,6 @@ import util.swingutils.SwingUtils;
 public class TunnelController extends RecursiveEnablePanel implements ActionListener {
 
   private Tunnel tunnel;
-  //private List<GateEvent> events = new ArrayList<GateEvent>();
   private Map<Double, GateEvent> eventMap;
 
   private DefaultListModel listModel = new DefaultListModel();
@@ -67,9 +67,6 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     this.setBorder(BorderFactory.createTitledBorder(tunnel.getName()));
   }
 
-  /**
-   * @param tunnel
-   */
   private void layoutGUI() {
     this.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
@@ -150,10 +147,12 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
   public void reset() {
     time = 0;
     eventMap = null;
-    tunnel.reset();
   }
 
   public void buildEventMap() {
+    if (Relativity.DEBUG) {
+      System.out.println("TunnelController: building event map");
+    }
     eventMap = new HashMap<Double, GateEvent>();
     for (Object eventObj : listModel.toArray()) {
       GateEvent event = (GateEvent) eventObj;
@@ -176,7 +175,9 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
       addEvent(gateEvent);
       timeField.setText("");
     } catch (NumberFormatException e) {
-      JOptionPane.showMessageDialog(SwingUtils.getActiveFrame(), "Invalid number: " + timeField.getText());
+      if (!timeField.getText().equals("")) {
+        JOptionPane.showMessageDialog(SwingUtils.getActiveFrame(), "Invalid number: " + timeField.getText());
+      }
     }
   }
 
@@ -196,6 +197,4 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
       removeSelectedEvents();
     }
   }
-
-
 }
