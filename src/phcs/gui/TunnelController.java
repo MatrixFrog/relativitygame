@@ -30,6 +30,7 @@ import util.swingutils.SwingUtils;
  * tunnel is moving they are automatically converted to whatever frame the animation
  * is being viewed in.
  */
+// TODO use an enum for left/right gate instead of a boolean.
 public class TunnelController extends RecursiveEnablePanel implements ActionListener {
 
   private Tunnel tunnel;
@@ -151,14 +152,14 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
 
   public void buildEventMap() {
     if (Relativity.DEBUG) {
-      System.out.println("TunnelController: building event map");
+      System.out.println("TunnelController: building event map. tunnel.getVX() = " + tunnel.getVX());
     }
     eventMap = new HashMap<Double, GateEvent>();
     for (Object eventObj : listModel.toArray()) {
       GateEvent event = (GateEvent) eventObj;
       double eventTime = event.time/PhysicalObject.gamma(tunnel.getSpeed());
       if (!event.gate) {
-        eventTime += tunnel.getSpeed()*tunnel.getWidth();
+        eventTime += tunnel.getVX()*tunnel.getWidth();
       }
       eventMap.put(eventTime,event);
     }
