@@ -175,4 +175,8 @@ public abstract class PhysicalObject {
   public int getY() {
     return (int) y;
   }
+
+  public double getVX() {
+    return vx;
+  }
 }

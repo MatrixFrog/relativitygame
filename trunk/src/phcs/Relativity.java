@@ -17,6 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -25,7 +26,10 @@ import javax.swing.Timer;
 
 public class Relativity extends JFrame implements GoalListener {
 
-  public static final boolean DEBUG = false;
+  public static final boolean DEBUG = true;
+  private int counter;
+  private JLabel counterLabel = new JLabel();
+
 
   private RelativityLevel level;
 
@@ -94,6 +98,10 @@ public class Relativity extends JFrame implements GoalListener {
     public void actionPerformed(ActionEvent arg0) {
       level.update();
       repaint();
+      if (DEBUG) {
+        counter++;
+        counterLabel.setText(counter + "");
+      }
     }
   };
 
@@ -127,6 +135,10 @@ public class Relativity extends JFrame implements GoalListener {
     gbc.weighty = 1;
 
     this.add(controlPanelContainer, gbc);
+    if (DEBUG) {
+      gbc.gridy++;
+      add(counterLabel, gbc);
+    }
   }
 
   private void initMenu() {
@@ -240,6 +252,10 @@ public class Relativity extends JFrame implements GoalListener {
     referenceFrameMenu.setEnabled(true);
     level.getControlPanel().setEnabled(true);
     repaint();
+    if (DEBUG) {
+      counter = 0;
+      counterLabel.setText("0");
+    }
   }
 
   public void goalAchieved() {

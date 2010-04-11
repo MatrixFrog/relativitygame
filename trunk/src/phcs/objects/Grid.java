@@ -22,6 +22,9 @@ public abstract class Grid {
     public HorizontalGrid(double x, double y, double width, double height,
         double vx, double vy) {
       super(x, y, width, height, vx, vy);
+      if (vx != 0 || vy != 0) {
+        throw new IllegalArgumentException("Grids should have zero velocity");
+      }
     }
 
     @Override
@@ -49,6 +52,9 @@ public abstract class Grid {
     public VerticalGrid(double x, double y, double width, double height,
         double vx, double vy) {
       super(x, y, width, height, vx, vy);
+      if (vx != 0 || vy != 0) {
+        throw new IllegalArgumentException("Grids should have zero velocity");
+      }
     }
 
     @Override
