@@ -115,14 +115,19 @@ public class TunnelControllerTest extends JFrame implements ActionListener {
       timer.start();
     }
     else if (e.getSource() == resetButton) {
-      timer.stop();
-      tunnelController.reset();
-      time = 0;
-      timeLabel.setText(Integer.toString(time));
-      repaint();
+      reset();
     }
     else if (e.getSource() == enableButton) {
       tunnelController.setEnabled(!tunnelController.isEnabled());
     }
+  }
+
+  private void reset() {
+    timer.stop();
+    tunnelController.reset();
+    tunnel.reset();
+    time = 0;
+    timeLabel.setText(Integer.toString(time));
+    repaint();
   }
 }

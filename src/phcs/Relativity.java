@@ -105,6 +105,21 @@ public class Relativity extends JFrame implements GoalListener {
     }
   };
 
+  /**
+   * Pauses or unpauses the simulation.
+   */
+  // FIXME This should only be callable while the simulation is running.
+  private Action pauseAction = new AbstractAction("Pause/resume") {
+    public void actionPerformed(ActionEvent arg0) {
+      if (timer.isRunning()) {
+        timer.stop();
+      }
+      else {
+        timer.start();
+      }
+    }
+  };
+
   public Relativity() {
     super("Relativity");
 
@@ -160,18 +175,19 @@ public class Relativity extends JFrame implements GoalListener {
     simulationMenu.add(referenceFrameMenu);
 
     if (DEBUG) {
-      JMenu testMenu = new JMenu("Debug");
-      menuBar.add(testMenu);
-      testMenu.add(new AbstractAction("Repaint") {
+      JMenu debugMenu = new JMenu("Debug");
+      menuBar.add(debugMenu);
+      debugMenu.add(new AbstractAction("Repaint") {
         public void actionPerformed(ActionEvent arg0) {
           repaint();
         }
       });
-      testMenu.add(new AbstractAction("Validate") {
+      debugMenu.add(new AbstractAction("Validate") {
         public void actionPerformed(ActionEvent arg0) {
           validate();
         }
       });
+      debugMenu.add(pauseAction);
     }
 
     setJMenuBar(menuBar);
@@ -187,24 +203,31 @@ public class Relativity extends JFrame implements GoalListener {
     }
   }
 
+  /**
+   * Notice that the control panel (in the context of this class) is not the same as
+   * Level.controlPanel. The level control panel only contains the sliders/buttons/etc.
+   * relevant to that level. This control panel contains the level control panel, and the
+   * Go/Reset buttons.
+   */
   private JPanel createControlPanel() {
     JPanel controlPanel = new JPanel();
-
-    JButton goButton = new JButton(goAction);
-    JButton resetButton = new JButton(resetAction);
 
     controlPanel.setLayout(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.gridx = gbc.gridy = 0;
     gbc.weightx = gbc.weighty = 1;
     gbc.fill = GridBagConstraints.NONE;
-    controlPanel.add(goButton, gbc);
+    controlPanel.add(new JButton(goAction), gbc);
     gbc.gridx++;
-    controlPanel.add(resetButton, gbc);
+    controlPanel.add(new JButton(resetAction), gbc);
+    if (DEBUG) {
+      gbc.gridx++;
+      controlPanel.add(new JButton(pauseAction), gbc);
+    }
 
     gbc.gridx = 0;
     gbc.gridy = 1;
-    gbc.gridwidth = 2;
+    gbc.gridwidth = DEBUG ? 3 : 2; // in debug mode, make it 3 to make room for the extra button
     gbc.fill = GridBagConstraints.BOTH;
     controlPanel.add(level.getControlPanel(), gbc);
 

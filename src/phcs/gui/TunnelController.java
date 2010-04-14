@@ -119,6 +119,19 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
       return "Toggle " + gateString + " gate at t=" + time;
     }
 
+    /**
+     * @return the x coordinate of the event (either the position of the left gate,
+     * or the position of the right gate).
+     */
+    public double getX() {
+      if (this.gate) {
+        return tunnel.getX();
+      }
+      else {
+        return tunnel.getX() + tunnel.getWidth();
+      }
+    }
+
     public void doEvent() {
       if (gate) {
         tunnel.toggleLeftGate();
@@ -150,7 +163,12 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     eventMap = null;
   }
 
-  public void buildEventMap() {
+  /**
+   * Puts all the GateEvents into a Map with their Lorentz-transformed times as keys.
+   * Left gate events have an x coordinate in the tunnel's frame of tunnel.x. If the event
+   * is at time 't' in the tunnel's frame, it's at gamma*(t-v*x) in the other frame
+   */
+  private void buildEventMap() {
     if (Relativity.DEBUG) {
       System.out.println("TunnelController: building event map. tunnel.getVX() = " + tunnel.getVX());
     }

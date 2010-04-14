@@ -149,6 +149,10 @@ public abstract class PhysicalObject {
     this.name = name;
   }
 
+  /**
+   * This method returns the Lorentz-contracted width of the object. For its rest width
+   * (which is what is actually stored in the variable <tt>width</tt>) use {@link #getRestWidth()}
+   */
   public int getWidth() {
     if (running) {
       return (int) (width / gamma(vx));
@@ -160,6 +164,10 @@ public abstract class PhysicalObject {
 
   public int getHeight() {
     return (int) height;
+  }
+
+  public int getRestWidth() {
+    return (int) width;
   }
 
   /**
