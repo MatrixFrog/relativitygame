@@ -14,10 +14,11 @@ import util.swingutils.RecursiveEnablePanel;
  * @see http://en.wikipedia.org/wiki/Ladder_paradox
  */
 /* Solution:
- * The back end of the spaceship travels a distance of 300. Its speed is sqrt(3)/2
- * so it arrives at t = 300 / (sqrt(3)/2) which is about 346.41. Both gates should be toggled at
- * that time.
+ * The back end of the spaceship travels a distance of 300. Its Lorentz factor (gamma) is 2, so
+ * its speed must be sqrt(3)/2. It arrives at t = 300 / (sqrt(3)/2) which is about 346.41.
+ * Both gates should be toggled at that time (in the tunnel's frame).
  */
+// TODO split this into two separate challenges: one to figure out the speed, given that gamma=2 and another to figure out when the gates need to be toggled
 public class SpaceshipInTunnelLevel extends RelativityLevel {
 
   private Tunnel tunnel = new Tunnel(600, 285, 50, 30, 0, 0);
