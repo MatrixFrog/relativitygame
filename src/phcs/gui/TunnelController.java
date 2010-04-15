@@ -105,8 +105,8 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
 
   class GateEvent {
     /** true = left, false = right */
-    private boolean gate;
-    private double time;
+    private final boolean gate;
+    private final double time;
 
     public GateEvent(boolean gate, double time) {
       this.gate = gate;
@@ -165,8 +165,7 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
 
   /**
    * Puts all the GateEvents into a Map with their Lorentz-transformed times as keys.
-   * Left gate events have an x coordinate in the tunnel's frame of tunnel.x. If the event
-   * is at time 't' in the tunnel's frame, it's at gamma*(t-v*x) in the other frame
+   * If the event is at time 't' in the tunnel's frame, it's at gamma*(t-v*x) in the other.
    */
   private void buildEventMap() {
     if (Relativity.DEBUG) {
@@ -175,9 +174,19 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     eventMap = new HashMap<Double, GateEvent>();
     for (Object eventObj : listModel.toArray()) {
       GateEvent event = (GateEvent) eventObj;
-      double eventTime = event.time/PhysicalObject.gamma(tunnel.getSpeed());
-      if (!event.gate) {
-        eventTime += tunnel.getVX()*tunnel.getWidth();
+      // t' = gamma*(t - v*x)
+      double v = -tunnel.getSpeed(); // the speed of the current frame relative to the tunnel's rest frame
+      double gamma = PhysicalObject.gamma(v);
+      double t = event.time;
+      double x = tunnel.getInitialX() + (event.gate ? 0 : tunnel.getRestWidth());
+      double eventTime = gamma*(t-v*x);
+      if (Relativity.DEBUG) {
+        System.out.println("<"+event+">");
+        System.out.println("   gamma = " + gamma);
+        System.out.println("   t = " + t);
+        System.out.println("   v = " + v);
+        System.out.println("   x = " + x);
+        System.out.println("   t' = " + eventTime);
       }
       eventMap.put(eventTime,event);
     }

@@ -12,9 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import phcs.PhysicalObject;
 import phcs.objects.Tunnel;
 import util.swingutils.SwingUtils;
 
+// FIXME in this test class, the tunnel does not automatically length-contract
 public class TunnelControllerTest extends JFrame implements ActionListener {
 
   private TunnelController tunnelController;
@@ -35,7 +37,8 @@ public class TunnelControllerTest extends JFrame implements ActionListener {
     }
   };
   public TunnelControllerTest() {
-    tunnel = new Tunnel(300, 100, 100, 60, 0.5, 0);
+    // The use of gamma() here is a total hack
+    tunnel = new Tunnel(300, 100, 100*PhysicalObject.gamma(0.5), 60, 0.5, 0);
     tunnelController = new TunnelController(tunnel);
     velocitySlider = new VelocitySlider(tunnel, 0.5);
 
