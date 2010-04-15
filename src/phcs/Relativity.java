@@ -26,7 +26,7 @@ import javax.swing.Timer;
 
 public class Relativity extends JFrame implements GoalListener {
 
-  public static final boolean DEBUG = true;
+  public static final boolean DEBUG = false;
   private int counter;
   private JLabel counterLabel = new JLabel();
 
