@@ -11,14 +11,12 @@ import javax.swing.JPanel;
 
 public class GridTest extends JFrame {
 
-  private Grid.HorizontalGrid horizontalGrid = new Grid.HorizontalGrid();
-  private Grid.VerticalGrid verticalGrid = new Grid.VerticalGrid();
+  private HorizontalGrid horizontalGrid = new HorizontalGrid();
 
   private JPanel panel = new JPanel() {
     @Override
     public void paint(Graphics g) {
       horizontalGrid.paint(g);
-      verticalGrid.paint(g);
     }
   };
 

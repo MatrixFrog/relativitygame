@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import phcs.levels.LightClocksOnTrainLevel;
 import phcs.levels.SpaceshipInTunnelLevel;
+import phcs.objects.Grid;
 import util.swingutils.SwingUtils;
 
 /**
@@ -25,6 +26,7 @@ public abstract class RelativityLevel {
   private String name;
   protected String instructions;
   private List<GoalListener> goalListeners = new ArrayList<GoalListener>();
+  private List<Grid> grids = new ArrayList<Grid>();
 
   public void addSimulationObject(PhysicalObject obj) {
     simulationObjects.add(obj);
@@ -82,6 +84,10 @@ public abstract class RelativityLevel {
     }
   }
 
+  public void addGrid(Grid grid) {
+    grids.add(grid);
+  }
+
   /**
    * @return true if the goal condition has been met, meaning the player has achieved
    * the goal in this level
@@ -118,6 +124,9 @@ public abstract class RelativityLevel {
   }
 
   public void paint(Graphics g) {
+    for (Grid grid : grids) {
+      grid.paint(g);
+    }
     for (PhysicalObject obj : simulationObjects) {
       obj.paint(g);
     }

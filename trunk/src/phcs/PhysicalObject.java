@@ -20,7 +20,7 @@ public abstract class PhysicalObject {
   private double width, height;
 
   // Initial position
-  protected double initialX, initialY;
+  private double initialX, initialY;
 
   // Velocity
   protected double vx, vy;
@@ -186,5 +186,13 @@ public abstract class PhysicalObject {
 
   public double getVX() {
     return vx;
+  }
+
+  public double getInitialX() {
+    return initialX;
+  }
+
+  public double getInitialY() {
+    return initialY;
   }
 }

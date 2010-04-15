@@ -30,7 +30,6 @@ public class Relativity extends JFrame implements GoalListener {
   private int counter;
   private JLabel counterLabel = new JLabel();
 
-
   private RelativityLevel level;
 
   private Timer timer;
@@ -43,10 +42,6 @@ public class Relativity extends JFrame implements GoalListener {
     @Override
     public void paint(Graphics g) {
       if (level != null) {
-        if (DEBUG) {
-          g.setColor(Color.PINK);
-          g.fillRect(0, 0, getWidth(), getHeight());
-        }
         level.paint(g);
       }
     }
@@ -79,16 +74,24 @@ public class Relativity extends JFrame implements GoalListener {
 
     public void actionPerformed(ActionEvent ae) {
       Relativity.this.loadLevel(this.level);
+      goAction.setEnabled(true);
+      resetAction.setEnabled(true);
     }
   }
 
   private Action goAction = new AbstractAction("Go") {
+    {
+      setEnabled(false);
+    }
     public void actionPerformed(ActionEvent e) {
       go();
     }
   };
 
   private Action resetAction = new AbstractAction("Reset") {
+    {
+      setEnabled(false);
+    }
     public void actionPerformed(ActionEvent e) {
       reset();
     }
