@@ -6,8 +6,8 @@ import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
 
 import phcs.LightClockListener;
-import phcs.Relativity;
 import phcs.RelativityLevel;
+import phcs.Trace;
 import phcs.gui.VelocitySlider;
 import phcs.objects.LightClock;
 import util.swingutils.RecursiveEnablePanel;
@@ -60,7 +60,7 @@ public class LightClocksOnTrainLevel extends RelativityLevel implements LightClo
   }
 
   public void cycleCompleted(int counter) {
-    if (Relativity.DEBUG) {
+    if (Trace.TRACE) {
       System.out.println("counter: " + counter);
     }
     if (499 <= counter && counter < 502) {

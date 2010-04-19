@@ -20,7 +20,7 @@ public abstract class PhysicalObject {
   private double width, height;
 
   // Initial position
-  private double initialX, initialY;
+  double initialX, initialY;
 
   // Velocity
   protected double vx, vy;

@@ -24,15 +24,17 @@ public class ReferenceFrame {
     return new ReferenceFrame(-vx, -vy);
   }
 
-  public void transformVelocity(PhysicalObject obj) {
+  // TODO this needs to not only transform the velocity, but also move the object
+  public void transform(PhysicalObject obj) {
     obj.vx = (obj.vx - this.vx) / (1 - obj.vx * this.vx);
+    //obj.initialX /= PhysicalObject.gamma(this.vx);
   }
 
   /**
    * Equivalent to <tt>this.inverted().transformVelocity(obj)</tt>
    */
-  public void untransformVelocity(PhysicalObject obj) {
-    this.inverted().transformVelocity(obj);
+  public void untransform(PhysicalObject obj) {
+    this.inverted().transform(obj);
   }
 
   @Override

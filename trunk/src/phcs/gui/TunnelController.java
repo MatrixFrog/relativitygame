@@ -19,7 +19,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import phcs.PhysicalObject;
-import phcs.Relativity;
+import phcs.Trace;
 import phcs.objects.Tunnel;
 import util.swingutils.RecursiveEnablePanel;
 import util.swingutils.SwingUtils;
@@ -168,7 +168,7 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
    * If the event is at time 't' in the tunnel's frame, it's at gamma*(t-v*x) in the other.
    */
   private void buildEventMap() {
-    if (Relativity.DEBUG) {
+    if (Trace.TRACE) {
       System.out.println("TunnelController: building event map. tunnel.getVX() = " + tunnel.getVX());
     }
     eventMap = new HashMap<Double, GateEvent>();
@@ -180,7 +180,7 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
       double t = event.time;
       double x = tunnel.getInitialX() + (event.gate ? 0 : tunnel.getRestWidth());
       double eventTime = gamma*(t-v*x);
-      if (Relativity.DEBUG) {
+      if (Trace.TRACE) {
         System.out.println("<"+event+">");
         System.out.println("   gamma = " + gamma);
         System.out.println("   t = " + t);

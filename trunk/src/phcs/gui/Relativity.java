@@ -1,4 +1,4 @@
-package phcs;
+package phcs.gui;
 
 import static util.swingutils.SwingUtils.useDefaultLookAndFeel;
 import static util.swingutils.SwingUtils.useDialogExceptionHandler;
@@ -24,9 +24,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import phcs.GoalListener;
+import phcs.PhysicalObject;
+import phcs.RelativityLevel;
+import phcs.Trace;
+
 public class Relativity extends JFrame implements GoalListener {
 
-  public static final boolean DEBUG = false;
   private int counter;
   private JLabel counterLabel = new JLabel();
 
@@ -101,7 +105,7 @@ public class Relativity extends JFrame implements GoalListener {
     public void actionPerformed(ActionEvent arg0) {
       level.update();
       repaint();
-      if (DEBUG) {
+      if (Trace.TRACE) {
         counter++;
         counterLabel.setText(counter + "");
       }
@@ -153,7 +157,7 @@ public class Relativity extends JFrame implements GoalListener {
     gbc.weighty = 1;
 
     this.add(controlPanelContainer, gbc);
-    if (DEBUG) {
+    if (Trace.TRACE) {
       gbc.gridy++;
       add(counterLabel, gbc);
     }
@@ -177,7 +181,7 @@ public class Relativity extends JFrame implements GoalListener {
     referenceFrameMenu = new JMenu("Reference Frame");
     simulationMenu.add(referenceFrameMenu);
 
-    if (DEBUG) {
+    if (Trace.TRACE) {
       JMenu debugMenu = new JMenu("Debug");
       menuBar.add(debugMenu);
       debugMenu.add(new AbstractAction("Repaint") {
@@ -223,14 +227,14 @@ public class Relativity extends JFrame implements GoalListener {
     controlPanel.add(new JButton(goAction), gbc);
     gbc.gridx++;
     controlPanel.add(new JButton(resetAction), gbc);
-    if (DEBUG) {
+    if (Trace.TRACE) {
       gbc.gridx++;
       controlPanel.add(new JButton(pauseAction), gbc);
     }
 
     gbc.gridx = 0;
     gbc.gridy = 1;
-    gbc.gridwidth = DEBUG ? 3 : 2; // in debug mode, make it 3 to make room for the extra button
+    gbc.gridwidth = Trace.TRACE ? 3 : 2; // in debug mode, make it 3 to make room for the extra button
     gbc.fill = GridBagConstraints.BOTH;
     controlPanel.add(level.getControlPanel(), gbc);
 
@@ -278,7 +282,7 @@ public class Relativity extends JFrame implements GoalListener {
     referenceFrameMenu.setEnabled(true);
     level.getControlPanel().setEnabled(true);
     repaint();
-    if (DEBUG) {
+    if (Trace.TRACE) {
       counter = 0;
       counterLabel.setText("0");
     }
@@ -290,7 +294,7 @@ public class Relativity extends JFrame implements GoalListener {
   }
 
   public static void log(String msg) {
-    if (DEBUG) {
+    if (Trace.TRACE) {
       System.out.println(msg);
     }
   }
