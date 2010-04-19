@@ -67,10 +67,9 @@ public class Tunnel extends PhysicalObject {
   }
 
   @Override
-  public void timeIncrement(double time) {
-    if (controller != null) {
-      controller.timeIncrement(time);
-    }
+  public void update() {
+    super.update();
+    controller.update();
   }
 
   private void paintLeftGate(Graphics g) {

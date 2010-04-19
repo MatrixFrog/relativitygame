@@ -103,19 +103,19 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     gbc.gridx++;
   }
 
-  class GateEvent {
+  public class GateEvent {
     /** true = left, false = right */
-    private final boolean gate;
+    private final boolean leftGate;
     private final double time;
 
-    public GateEvent(boolean gate, double time) {
-      this.gate = gate;
+    public GateEvent(boolean leftGate, double time) {
+      this.leftGate = leftGate;
       this.time = time;
     }
 
     @Override
     public String toString() {
-      String gateString = gate ? "left" : "right";
+      String gateString = leftGate ? "left" : "right";
       return "Toggle " + gateString + " gate at t=" + time;
     }
 
@@ -124,7 +124,7 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
      * or the position of the right gate).
      */
     public double getX() {
-      if (this.gate) {
+      if (this.leftGate) {
         return tunnel.getX();
       }
       else {
@@ -133,7 +133,7 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     }
 
     public void doEvent() {
-      if (gate) {
+      if (leftGate) {
         tunnel.toggleLeftGate();
       }
       else {
@@ -142,20 +142,19 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     }
   }
 
-  public void timeIncrement(double addedTime) {
+  public void update() {
     if (eventMap == null) {
       buildEventMap();
     }
-    // Any events that happen between now and (now + addedTime) are triggered.
     for (Entry<Double, GateEvent> e : eventMap.entrySet()) {
       // TODO figure out a way to do this so that we're not looping over the whole map every single timestep
       double eventTime = e.getKey();
       GateEvent event = e.getValue();
-      if (eventTime >= time && eventTime < (time+addedTime)) {
+      if (time <= eventTime && eventTime < (time+1)) {
         event.doEvent();
       }
     }
-    time += addedTime;
+    time += 1;
   }
 
   public void reset() {
@@ -175,10 +174,10 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     for (Object eventObj : listModel.toArray()) {
       GateEvent event = (GateEvent) eventObj;
       // t' = gamma*(t - v*x)
-      double v = -tunnel.getSpeed(); // the speed of the current frame relative to the tunnel's rest frame
+      double v = tunnel.getSpeed();
       double gamma = PhysicalObject.gamma(v);
       double t = event.time;
-      double x = tunnel.getInitialX() + (event.gate ? 0 : tunnel.getRestWidth());
+      double x = tunnel.getInitialX() + (event.leftGate ? 0 : tunnel.getRestWidth());
       double eventTime = gamma*(t-v*x);
       if (Trace.TRACE) {
         System.out.println("<"+event+">");
@@ -192,7 +191,11 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     }
   }
 
-  void addEvent(GateEvent e) {
+  /**
+   * Should only be called directly for testing/debugging. otherwise, use the GUI.
+   * @see TunnelController#addEventFromGUI()
+   */
+  public void addEvent(GateEvent e) {
     listModel.addElement(e);
   }
 
