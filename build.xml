@@ -41,7 +41,7 @@
 	<target name="createJar" depends="compile" description="Create an executable jar file">
 		<jar destfile="relativity.jar">
 			<manifest>
-				<attribute name="Main-Class" value="phcs.Relativity" />
+				<attribute name="Main-Class" value="phcs.gui.Relativity" />
 			</manifest>
 			<fileset dir="${build}" />
 		</jar>
@@ -51,7 +51,7 @@
 		for a system running Java 1.5">
 		<jar destfile="relativity_java1.5.jar">
 			<manifest>
-				<attribute name="Main-Class" value="phcs.Relativity" />
+				<attribute name="Main-Class" value="phcs.gui.Relativity" />
 			</manifest>
 			<fileset dir="${build}" />
 		</jar>
@@ -66,10 +66,10 @@
 	</target>
 	
 	<target name="run" depends="compile" description="Play the game">
-		<java classname="phcs.Relativity" classpathref="project.path" fork="true"/>
+		<java classname="phcs.gui.Relativity" classpathref="project.path" fork="true"/>
 	</target>
 	
 	<target name="run1.5" depends="compile1.5" description="Play the game (Java 1.5)">
-		<java classname="phcs.Relativity" classpathref="project.path" fork="true"/>
+		<java classname="phcs.gui.Relativity" classpathref="project.path" fork="true"/>
 	</target>
 </project>

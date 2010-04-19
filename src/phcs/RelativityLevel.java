@@ -38,13 +38,12 @@ public abstract class RelativityLevel {
 
   /**
    * This is what gets called when the player presses the "Go" button in the UI. It calls
-   * rf.transformVelocity(obj) for all the objects in the level where rf is the reference
-   * frame being used.
+   * <tt>referenceFrame.transform(obj)</tt> for all the objects in the level
    */
   public void go() {
     running = true;
     for (PhysicalObject obj : simulationObjects) {
-      referenceFrame.transformVelocity(obj);
+      referenceFrame.transform(obj);
     }
     for (PhysicalObject obj : this.simulationObjects) {
       obj.go();
@@ -104,7 +103,7 @@ public abstract class RelativityLevel {
       obj.reset();
     }
     for (PhysicalObject obj : simulationObjects) {
-      referenceFrame.untransformVelocity(obj);
+      referenceFrame.untransform(obj);
     }
     running = false;
   }
@@ -155,7 +154,7 @@ public abstract class RelativityLevel {
   );
 
   public void showInstructions() {
-    if (Relativity.DEBUG) {
+    if (Trace.TRACE) {
       System.out.println("Showing instructions.");
     }
     if (instructions != null) {
