@@ -27,7 +27,13 @@ public class ReferenceFrame {
   // TODO this needs to not only transform the velocity, but also move the object
   public void transform(PhysicalObject obj) {
     obj.vx = (obj.vx - this.vx) / (1 - obj.vx * this.vx);
-    //obj.initialX /= PhysicalObject.gamma(this.vx);
+    if (this.vx < 0) {
+      obj.initialX *= PhysicalObject.gamma(this.vx);
+    }
+    else {
+      obj.initialX /= PhysicalObject.gamma(this.vx);
+    }
+    obj.reset();
   }
 
   /**
