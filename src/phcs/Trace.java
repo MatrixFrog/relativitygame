@@ -5,7 +5,7 @@ package phcs;
  */
 public class Trace {
 
-  public static boolean TRACE = true;
+  public static boolean TRACE = false;
 
   public static void trace(Object o) {
     if (TRACE) {
