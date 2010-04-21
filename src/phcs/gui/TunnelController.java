@@ -4,7 +4,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -34,7 +36,7 @@ import util.swingutils.SwingUtils;
 public class TunnelController extends RecursiveEnablePanel implements ActionListener {
 
   private Tunnel tunnel;
-  private Map<Double, GateEvent> eventMap;
+  private Map<Double, List<GateEvent>> eventMap; // a little hacky. need to sometimes store multiple events under the same key
 
   private DefaultListModel listModel = new DefaultListModel();
   private JList guiEventList = new JList(listModel);
@@ -146,12 +148,13 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     if (eventMap == null) {
       buildEventMap();
     }
-    for (Entry<Double, GateEvent> e : eventMap.entrySet()) {
+    for (Entry<Double, List<GateEvent>> e : eventMap.entrySet()) {
       // TODO figure out a way to do this so that we're not looping over the whole map every single timestep
       double eventTime = e.getKey();
-      GateEvent event = e.getValue();
-      if (time <= eventTime && eventTime < (time+1)) {
-        event.doEvent();
+      for (GateEvent event : e.getValue()) {
+        if (time <= eventTime && eventTime < (time+1)) {
+          event.doEvent();
+        }
       }
     }
     time += 1;
@@ -170,7 +173,7 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
     if (Trace.TRACE) {
       System.out.println("TunnelController: building event map. tunnel.getVX() = " + tunnel.getVX());
     }
-    eventMap = new HashMap<Double, GateEvent>();
+    eventMap = new HashMap<Double, List<GateEvent>>();
     for (Object eventObj : listModel.toArray()) {
       GateEvent event = (GateEvent) eventObj;
       // t' = gamma*(t - v*x)
@@ -181,14 +184,17 @@ public class TunnelController extends RecursiveEnablePanel implements ActionList
       double eventTime = gamma*(t-v*x);
       if (Trace.TRACE) {
         System.out.println("<"+event+">");
-        System.out.println("   gamma = " + gamma);
-        System.out.println("   t = " + t);
-        System.out.println("   v = " + v);
-        System.out.println("   x = " + x);
-        System.out.println("   t' = " + eventTime);
+        System.out.format("  gamma=%s;  t=%s;  v=%s;  x=%s;  t'=%s%n", gamma, t, v, x, eventTime);
       }
-      eventMap.put(eventTime,event);
+      addEventToEventMap(eventTime,event);
     }
+  }
+
+  private void addEventToEventMap(double eventTime, GateEvent event) {
+    if (eventMap.get(eventTime) == null) {
+      eventMap.put(eventTime, new ArrayList<GateEvent>(1));
+    }
+    eventMap.get(eventTime).add(event);
   }
 
   /**
