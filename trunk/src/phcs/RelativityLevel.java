@@ -50,6 +50,10 @@ public abstract class RelativityLevel {
     }
   }
 
+  /**
+   * This is the method that is called once every timestep. Levels shouldn't necessarily
+   * override this method, but if they do, they should be sure to call <tt>super.update();</tt>
+   */
   public void update() {
     for (PhysicalObject obj : this.simulationObjects) {
       obj.update();
