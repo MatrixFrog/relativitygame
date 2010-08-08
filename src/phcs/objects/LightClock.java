@@ -15,13 +15,13 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import phcs.Flash;
+import phcs.Photon;
 import phcs.LightClockListener;
 import phcs.PhysicalObject;
 
 public class LightClock extends PhysicalObject implements ChangeListener {
 
-  private List<Flash> flashes;
+  private List<Photon> flashes;
   private int counter;
   private List<LightClockListener> listeners = new ArrayList<LightClockListener>();
 
@@ -65,7 +65,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
    */
   public void flash() {
     double flash_vy = sqrt(1 - sq(vx));
-    Flash flash = new Flash(getTopX(), getTopY(), vx, flash_vy);
+    Photon flash = new Photon(getTopX(), getTopY(), vx, flash_vy);
     flashes.add(flash);
   }
 
@@ -78,7 +78,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
 
     g.drawString(getName(), (int) x, (int) y);
 
-    for (Flash flash : flashes) {
+    for (Photon flash : flashes) {
       flash.paint(g);
     }
   }
@@ -87,14 +87,14 @@ public class LightClock extends PhysicalObject implements ChangeListener {
   public void update() {
     super.update();
     counter++;
-    for (Flash flash : flashes) {
+    for (Photon flash : flashes) {
       if (flash.getY() >= this.getBottomY()) {
         flash.reflectVertical();
       }
       flash.update();
     }
     if (!flashes.isEmpty()) {
-      Flash firstFlash = flashes.get(0);
+      Photon firstFlash = flashes.get(0);
       if (firstFlash.getY() <= this.getTopY()) {
         flashes.remove(firstFlash);
         notifyLightClockListeners();
@@ -106,7 +106,7 @@ public class LightClock extends PhysicalObject implements ChangeListener {
   public void reset() {
     super.reset();
     counter = 0;
-    flashes = new LinkedList<Flash>();
+    flashes = new LinkedList<Photon>();
   }
 
   @Override

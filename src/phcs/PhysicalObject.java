@@ -68,7 +68,7 @@ public abstract class PhysicalObject {
    * then the subclass should override this method. The time dilation effect is
    * automatically taken into account in {@link #update()}.
    */
-  public void timeIncrement(@SuppressWarnings("unused") double time) {
+  public void timeIncrement(double time) {
     // no action
   }
 
