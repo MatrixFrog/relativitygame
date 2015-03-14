@@ -1,0 +1,1 @@
+This is a senior project for my Physics/Computer Science program at USC. The goal is to create a game that students can play to help them learn Special Relativity. To play the game, simply download it from the right side of this page. The "(Java 1.5)" version is required if you are on USC's aludra server.
